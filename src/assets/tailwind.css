@@ -3,3 +3,7 @@
 @tailwind components;
 
 @tailwind utilities;
+
+a:active {
+  transform: scale(0.95);
+}
