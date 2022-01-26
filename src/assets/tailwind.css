@@ -7,3 +7,10 @@
 a:active {
   transform: scale(0.95);
 }
+a.card:active {
+  transform: scale(0.98);
+}
+
+.gap-30 {
+  gap: 30px;
+}
