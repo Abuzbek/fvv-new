@@ -35,8 +35,12 @@ export default [
     type: "single_page",
   },
   {
-    value: "photos_videos",
-    type: "gallery",
+    value: "videos",
+    type: "video_gallery",
+  },
+  {
+    value: "photos",
+    type: "photo_gallery",
   },
   {
     value: "leaderships",

@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 import Header from "../../components/global-components/Header.vue";
 import CardLidership from "../../components/global-components/CardLidership.vue";
+import RigthAside from "../../components/global-components/RigthAside.vue";
 const route = useRoute();
 // const router = useRouter();
 const i18n = useI18n();
@@ -72,12 +73,12 @@ watch(
       class="container mx-auto px-4"
       :class="route.params.typeId == 'leaderships' ? 'mt-10' : 'mt-32'"
     >
-      <div class="grid grid-cols-3">
+      <div class="grid grid-cols-3 gap-8">
         <div class="col-span-2">
-          <h1 class="text-3xl font-bold">
+          <h1 class="text-3xl font-bold bg-white p-5 rounded-lg mb-5">
             {{ dataResults.title || dataResults.rank }}
           </h1>
-          <div class="card bg-white p-5 rounded-lg mt-10 mb-12">
+          <div class="card bg-white p-5 rounded-lg mb-12">
             <img
               :src="dataResults.thumbnail"
               class="w-full rounded-lg mb-5"
@@ -117,6 +118,9 @@ watch(
               ></p>
             </div>
           </div>
+        </div>
+        <div>
+          <RigthAside/>
         </div>
       </div>
     </div>

@@ -25,8 +25,7 @@ defineProps(["thumbnail", "title", "body", "date", "views"]);
         >
           {{ title }}
         </div>
-        <div class="card-body slice-text-3 text-lg text-gray-900 mb-1">
-          {{ body }}
+        <div class="card-body slice-text-3 text-lg text-gray-900 mb-1 slice-text-4" v-html="body">
         </div>
       </div>
     </div>
@@ -41,6 +40,20 @@ defineProps(["thumbnail", "title", "body", "date", "views"]);
   -webkit-box-orient: vertical;
 }
 .slice-text-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.slice-text-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+.slice-text-5 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

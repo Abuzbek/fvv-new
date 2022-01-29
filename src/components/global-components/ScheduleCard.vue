@@ -1,6 +1,7 @@
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 defineProps([
+  "id",
   "course_level",
   "shift",
   "date",
@@ -8,10 +9,13 @@ defineProps([
   "end_time",
   "group",
 ]);
+const $emit = defineEmits(["click"]);
 </script>
 <template>
-  <div class="p-2.5 rounded-md bg-white">
-    <h3 class="text-lg font-medium mb-3">{{ group.name }}</h3>
+  <div class="p-2.5 rounded-md bg-white" @click="$emit('click', id)">
+    <h3 class="text-lg font-medium mb-3">
+      {{ group.number }} - {{ group.name }}
+    </h3>
     <ul>
       <li class="mb-2.5 flex items-center text-sm">
         <span class="text-gray-600">Kurs - </span>

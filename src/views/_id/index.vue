@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from "@vue/runtime-core";
+import Paginate from "vuejs-paginate/src/components/Paginate.vue";
 import globalTypes from "@/hooks/globalTypes";
 import http from "@/hooks/http";
 import { useRoute } from "vue-router";
@@ -12,11 +13,15 @@ import CardLidership from "../../components/global-components/CardLidership.vue"
 import BookCard from "../../components/global-components/BookCard.vue";
 import ScheduleCard from "../../components/global-components/ScheduleCard.vue";
 import BaseCard from "../../components/global-components/BaseCard.vue";
+import ZigZagCard from "../../components/global-components/ZigZagCard.vue";
+import VideoCard from "../../components/global-components/VideoCard.vue";
+import LightGallery from "../../components/global-components/LightGallery.vue";
+import LessonModal from "../../components/global-components/LessonModal.vue";
 const route = useRoute();
 // const router = useRouter();
 const i18n = useI18n();
 const perPageGrid = ref(9);
-const perPage = ref(6);
+const perPage = ref(2);
 const type = ref("");
 const data = ref([]);
 const dataResults = ref([]);
@@ -47,6 +52,7 @@ const schema = ref([
   { title: "Kechki", value: "NIGHT" },
 ]);
 const filter = ref({
+  p: 1,
   date: "",
   course_level: "",
   shift: "",
@@ -56,6 +62,16 @@ const dateTitle = ref("");
 const schemaTitle = ref("");
 const groupTitle = ref("");
 const typeId = ref("");
+const showLight = ref(false);
+const attachment = ref({
+  src: "",
+  idx: 0,
+  title: "",
+});
+const lesson = ref(null);
+const groupValue = ref("");
+const schedule = ref(null);
+const isPaginate = ref(null);
 class Methods {
   async byCategoryId(type, id, filter) {
     const typeOF = globalTypes.find((n) => {
@@ -79,32 +95,57 @@ class Methods {
           typeOF.type == "schedule"
             ? 18
             : typeOF.structure
-            ? perPageGrid.value
-            : perPage.value,
+            ? perPage.value
+            : perPageGrid.value,
       },
     });
     return { response: resp, type };
   }
-  async getContent() {
+  async getContent(value) {
     try {
-      const getId = await http.get(
-        `/${i18n.locale.value}/api/categories/${route.params.id}`
-      );
-      category.value = getId.data;
-      const resp = await byCategoryId(getId.data.type, getId.data.id);
-      type.value = resp.type;
-      data.value = resp.response.data;
-      dataResults.value =
-        getId.data.type == "e_library"
-          ? resp.response.data
-          : resp.response.data.results.map((n) => {
-              n.data = n.date = new Date(n.date).toLocaleDateString("ru-Ru", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
+      if (value == "schedule") {
+        const getId = await http.get(
+          `/${i18n.locale.value}/api/categories/${route.params.id}`
+        );
+        category.value = getId.data;
+        const resp = await byCategoryId("schedule", "", filter.value);
+        type.value = resp.type;
+        data.value = resp.response.data;
+        dataResults.value =
+          getId.data.type == "e_library"
+            ? resp.response.data
+            : resp.response.data.results.map((n) => {
+                n.data = n.date = new Date(n.date).toLocaleDateString("ru-Ru", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                });
+                return { ...n };
               });
-              return { ...n };
-            });
+      } else {
+        const getId = await http.get(
+          `/${i18n.locale.value}/api/categories/${route.params.id}`
+        );
+        category.value = getId.data;
+        const resp = await byCategoryId(
+          getId.data.type,
+          getId.data.id,
+          filter.value
+        );
+        type.value = resp.type;
+        data.value = resp.response.data;
+        dataResults.value =
+          getId.data.type == "e_library"
+            ? resp.response.data
+            : resp.response.data.results.map((n) => {
+                n.data = n.date = new Date(n.date).toLocaleDateString("ru-Ru", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                });
+                return { ...n };
+              });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -114,7 +155,9 @@ class Methods {
       isCalendar.value = false;
     } else if (isGroup.value) {
       isGroup.value = false;
-    } else {
+    } else if (lesson.value) {
+      lesson.value = null;
+    } else if (isSchema.value) {
       isSchema.value = false;
     }
   }
@@ -122,27 +165,99 @@ class Methods {
     filter.value.course_level = groups.value.find(
       (n) => n.value === value
     ).value;
+    filter.value.p = 1;
     groupTitle.value = filter.value.course_level.title;
     isGroup.value = false;
-    await byCategoryId("schedule", "", ...filter.value);
+    await getContent("schedule");
   }
   async clickSchema(value) {
     filter.value.shift = schema.value.find((n) => n.value === value).value;
+    console.log(filter.value.shift);
+    filter.value.p = 1;
     schemaTitle.value = filter.value.shift.title;
     isSchema.value = false;
-    await byCategoryId("schedule", "", ...filter.value);
+    await getContent("schedule");
   }
-  searchGroup(e) {
-    console.log(e);
+  async searchGroup(e) {
+    filter.value.group = e;
+    filter.value.p = 1;
+    await getContent("schedule");
+  }
+  clickVideo(id) {
+    dataResults.value.find((n, i) => {
+      if (n.id == id) {
+        if (dataResults.value[i].video_path.includes("yout")) {
+          let splity = dataResults.value[i].video_path.split("/");
+          splity = splity[splity.length - 1];
+          attachment.value = {
+            src: splity,
+            idx: i,
+            title: dataResults.value[i].title,
+          };
+        } else {
+          attachment.value = {
+            src: dataResults.value[i].video_path,
+            idx: i,
+            title: dataResults.value[i].title,
+          };
+        }
+      }
+    });
+    showLight.value = true;
+  }
+  hideLight() {
+    showLight.value = false;
+  }
+  nextGallery(idx) {
+    let splity = dataResults.value[idx].video_path.split("/");
+    splity = splity[splity.length - 1];
+    attachment.value = {
+      src: splity,
+      idx: idx,
+      title: dataResults.value[idx].title,
+    };
+  }
+  prevGallery(idx) {
+    let splity = dataResults.value[idx].video_path.split("/");
+    splity = splity[splity.length - 1];
+    attachment.value = {
+      src: splity,
+      idx: idx,
+      title: dataResults.value[idx].title,
+    };
+  }
+  async getLessons(id) {
+    const lessons = await http.get(
+      `/${i18n.locale.value}/api/lessons/byScheduleId/${id}`
+    );
+    schedule.value = await http.get(
+      `/${i18n.locale.value}/api/schedules/${id}/`
+    );
+    schedule.value = schedule.value.data;
+    lesson.value = lessons.data;
+  }
+  async pagination(i) {
+    filter.value.p = i;
+    if (type.value == "schedule") {
+      await getContent("schedule");
+    } else {
+      await getContent();
+    }
   }
 }
 const {
+  pagination,
+  getLessons,
+  clickVideo,
   byCategoryId,
   getContent,
   closePopup,
   clickGroup,
   clickSchema,
   searchGroup,
+  hideLight,
+  nextGallery,
+  prevGallery,
 } = new Methods();
 onMounted(async () => {
   await getContent();
@@ -157,13 +272,39 @@ watch(
 );
 watch(
   () => filter.value.date,
-  (value) => {
+  async (value) => {
     dateTitle.value = new Date(value).toLocaleDateString("ru-Ru", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
     });
-    console.log(dateTitle.value);
+    filter.value.p = 1;
+    await getContent("schedule");
+  }
+);
+watch(
+  () => groupValue.value,
+  async (value) => {
+    value = String(value)
+      .replace(/[^0-9.]/g, "")
+      .replace(/(\..*?)\..*/g, "$1");
+    if (value) {
+      await searchGroup(value);
+    }
+  }
+);
+watch(
+  () => type.value,
+  (val) => {
+    if (val) {
+      let isPag =
+        val == "schedule"
+          ? 18
+          : globalTypes.find((n) => n.type == val).structure
+          ? perPage.value
+          : perPageGrid.value;
+      isPaginate.value = isPag;
+    }
   }
 );
 </script>
@@ -190,7 +331,7 @@ watch(
         </h2>
         <div v-for="(n, i) in dataResults" :key="i">
           <router-link
-            class="block"
+            class="block card"
             :to="`/${route.params.id}/${typeId}/${n.slug}`"
           >
             <CardYellowGrid v-bind="n" />
@@ -206,7 +347,7 @@ watch(
         </h2>
         <div v-for="(n, i) in dataResults" :key="i">
           <router-link
-            class="block"
+            class="block card"
             :to="`/${route.params.id}/${typeId}/${n.slug}`"
           >
             <CardFull v-bind="n" />
@@ -220,10 +361,25 @@ watch(
         <div class="bg-white rounded-lg p-5">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link
-              class="block"
+              class="block card"
               :to="`/${route.params.id}/${typeId}/${n.slug}`"
             >
               <ArticlesList v-bind="n" />
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 mb-12" v-else-if="type == 'article_zig_zag'">
+        <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
+          {{ category.name }}
+        </h2>
+        <div class="">
+          <div v-for="(n, i) in dataResults" :key="i">
+            <router-link
+              class="block card"
+              :to="`/${route.params.id}/${typeId}/${n.slug}`"
+            >
+              <ZigZagCard :isOdd="i % 2 == 0 ? true : false" v-bind="n" />
             </router-link>
           </div>
         </div>
@@ -235,11 +391,40 @@ watch(
         <div class="grid grid-cols-4 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link
-              class="block h-full"
+              class="block h-full card"
               :to="`/${route.params.id}/${typeId}/${n.slug}`"
             >
               <BaseCard v-bind="n" />
             </router-link>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 mb-12" v-else-if="type == 'video_gallery'">
+        <LightGallery
+          :show="showLight"
+          @removeLight="hideLight"
+          :gallerySize="dataResults.length - 1"
+          :currentGallery="attachment.idx"
+          @next="nextGallery"
+          @prev="prevGallery"
+        >
+          <template v-slot:img>
+            <transition name="transformX">
+              <iframe
+                class="w-full max-w-2xl h-80 pointer-events-auto"
+                :src="'https://www.youtube.com/embed/' + attachment.src"
+                :title="attachment.title"
+                frameborder="0"
+              ></iframe>
+            </transition>
+          </template>
+        </LightGallery>
+        <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
+          {{ category.name }}
+        </h2>
+        <div class="grid grid-cols-4 gap-8">
+          <div v-for="(n, i) in dataResults" :key="i">
+            <VideoCard v-bind="n" @click="clickVideo" />
           </div>
         </div>
       </div>
@@ -261,9 +446,16 @@ watch(
         </h2>
         <div
           class="overlay fixed top-0 left-0 w-full h-full z-10 bg-black bg-opacity-5"
-          v-show="isCalendar || isGroup || isSchema"
+          :class="{ 'z-30': lesson }"
+          v-show="isCalendar || isGroup || isSchema || lesson"
           @click="closePopup"
         ></div>
+        <LessonModal
+          @close="closePopup"
+          v-if="lesson"
+          :date="schedule.date"
+          :data="lesson"
+        />
         <div class="grid grid-cols-4 gap-2.5 mb-8">
           <div>
             <div
@@ -273,7 +465,7 @@ watch(
                 type="text"
                 placeholder="Guruh raqami"
                 class="w-full focus:outline-none"
-                @input="searchGroup($event.target.value)"
+                v-model.number="groupValue"
               />
               <div class="icon">
                 <svg
@@ -432,7 +624,7 @@ watch(
         </div>
         <div class="grid 2xl:grid-cols-6 xl:grid-cols-4 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
-            <ScheduleCard v-bind="n" />
+            <ScheduleCard v-bind="n" @click="getLessons" />
           </div>
         </div>
       </div>
@@ -443,7 +635,7 @@ watch(
         <div class="grid grid-cols-3 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link
-              class="block"
+              class="block card"
               :to="`/${route.params.id}/${typeId}/${n.slug}`"
             >
               <CardLidership v-bind="n" />
@@ -466,6 +658,73 @@ watch(
             </div>
           </div>
         </div>
+      </div>
+      <div
+        v-if="type !== 'single_page' && isPaginate <= data.count"
+        class="mb-10"
+      >
+        <Paginate
+          :value="data.current_page"
+          :page-count="data.num_pages"
+          :page-range="3"
+          :click-handler="pagination"
+          :prev-text="`<svg width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;>
+        <g >
+        <path d=&quot;M14.71 6.8309C14.32 6.44276 13.69 6.44276 13.3 6.8309L8.70998 11.399C8.31998 11.7871 8.31998 12.4141 8.70998 12.8022L13.3 17.3703C13.69 17.7584 14.32 17.7584 14.71 17.3703C15.1 16.9822 15.1 16.3552 14.71 15.967L10.83 12.0956L14.71 8.23416C15.1 7.84602 15.09 7.20908 14.71 6.8309Z&quot; fill=&quot;#fff&quot;/>
+        </g>
+        <defs>
+        <clipPath>
+        <rect width=&quot;24&quot; height=&quot;24&quot; rx=&quot;4&quot; fill=&quot;white&quot;/>
+        </clipPath>
+        </defs>
+        </svg>
+        `"
+          :next-text="`<svg width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;>
+          <g >
+          <path d=&quot;M9.29002 6.8309C9.68002 6.44276 10.31 6.44276 10.7 6.8309L15.29 11.399C15.68 11.7871 15.68 12.4141 15.29 12.8022L10.7 17.3703C10.31 17.7584 9.68002 17.7584 9.29002 17.3703C8.90002 16.9822 8.90002 16.3552 9.29002 15.967L13.17 12.0956L9.29002 8.23416C8.90002 7.84602 8.91002 7.20908 9.29002 6.8309Z&quot; fill=&quot;#fff&quot;/>
+          </g>
+          <defs>
+          <clipPath>
+          <rect width=&quot;24&quot; height=&quot;24&quot; rx=&quot;4&quot; transform=&quot;matrix(-1 0 0 1 24 0)&quot; fill=&quot;white&quot;/>
+          </clipPath>
+          </defs>
+          </svg>
+          `"
+          active-class="border-[blue-400
+                      text-blue-400"
+          next-class="relative
+              inline-flex
+              items-center
+              px-2
+              py-2
+              rounded-r-md
+              bg-blue-400
+              text-sm
+              font-medium
+              text-gray-500 ml-2 transform active:scale-95"
+          prev-class="relative
+              inline-flex
+              items-center
+              px-2
+              py-2
+              rounded-l-md
+              bg-blue-400
+              text-sm
+              font-medium
+              text-gray-500 mr-2 transform active:scale-95"
+          page-class="w-10 justify-center h-10 relative
+              inline-flex
+              items-center
+              px-2
+              py-2
+              rounded-md
+              bg-gray-50
+              text-sm
+              font-medium
+              text-gray-500
+              hover:bg-white mr-2 transform active:scale-95"
+          :container-class="'relative z-0 inline-flex rounded-md'"
+        ></Paginate>
       </div>
     </div>
   </div>

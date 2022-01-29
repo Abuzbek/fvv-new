@@ -67,9 +67,11 @@ module.exports = {
       56: "14rem",
       60: "15rem",
       64: "16rem",
+      '70-px':'70px',      
       72: "18rem",
       80: "20rem",
       96: "24rem",
+      '118-px': '118px'
     },
     animation: {
       none: "none",
@@ -871,6 +873,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     backgroundImage: ["responsive"],
     backgroundOpacity: [
@@ -880,6 +883,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     backgroundPosition: ["responsive"],
     backgroundRepeat: ["responsive"],
@@ -894,6 +898,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     borderOpacity: [
       "responsive",
@@ -902,12 +907,13 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     borderRadius: ["responsive"],
     borderStyle: ["responsive"],
     borderWidth: ["responsive"],
     boxDecorationBreak: ["responsive"],
-    boxShadow: ["responsive", "group-hover", "focus-within", "hover", "focus"],
+    boxShadow: ["responsive", "group-hover", "focus-within", "hover", "focus","active"],
     boxSizing: ["responsive"],
     brightness: ["responsive"],
     clear: ["responsive"],
@@ -935,7 +941,7 @@ module.exports = {
     fontVariantNumeric: ["responsive"],
     fontWeight: ["responsive"],
     gap: ["responsive"],
-    gradientColorStops: ["responsive", "dark", "hover", "focus"],
+    gradientColorStops: ["responsive", "dark", "hover", "focus", "active"],
     grayscale: ["responsive"],
     gridAutoColumns: ["responsive"],
     gridAutoFlow: ["responsive"],
@@ -968,7 +974,7 @@ module.exports = {
     mixBlendMode: ["responsive"],
     objectFit: ["responsive"],
     objectPosition: ["responsive"],
-    opacity: ["responsive", "group-hover", "focus-within", "hover", "focus"],
+    opacity: ["responsive", "group-hover", "focus-within", "hover", "focus", "active"],
     order: ["responsive"],
     outline: ["responsive", "focus-within", "focus"],
     overflow: ["responsive"],
@@ -987,11 +993,11 @@ module.exports = {
     ringOffsetWidth: ["responsive", "focus-within", "focus"],
     ringOpacity: ["responsive", "dark", "focus-within", "focus"],
     ringWidth: ["responsive", "focus-within", "focus"],
-    rotate: ["responsive", "hover", "focus"],
+    rotate: ["responsive", "hover", "focus", "active"],
     saturate: ["responsive"],
-    scale: ["responsive", "hover", "focus"],
+    scale: ["responsive", "hover", "focus", "active"],
     sepia: ["responsive"],
-    skew: ["responsive", "hover", "focus"],
+    skew: ["responsive", "hover", "focus", "active"],
     space: ["responsive"],
     stroke: ["responsive"],
     strokeWidth: ["responsive"],
@@ -1004,6 +1010,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     textDecoration: [
       "responsive",
@@ -1011,6 +1018,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     textOpacity: [
       "responsive",
@@ -1019,6 +1027,7 @@ module.exports = {
       "focus-within",
       "hover",
       "focus",
+      "active"
     ],
     textOverflow: ["responsive"],
     textTransform: ["responsive"],
@@ -1028,14 +1037,14 @@ module.exports = {
     transitionDuration: ["responsive"],
     transitionProperty: ["responsive"],
     transitionTimingFunction: ["responsive"],
-    translate: ["responsive", "hover", "focus"],
+    translate: ["responsive", "hover", "focus", "active"],
     userSelect: ["responsive"],
     verticalAlign: ["responsive"],
     visibility: ["responsive"],
     whitespace: ["responsive"],
     width: ["responsive"],
     wordBreak: ["responsive"],
-    zIndex: ["responsive", "focus-within", "focus"],
+    zIndex: ["responsive", "focus-within", "focus", "active"],
   },
   plugins: [],
 };

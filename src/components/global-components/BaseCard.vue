@@ -22,9 +22,7 @@ defineProps(["title", "thumbnail", "views", "date", "body"]);
           </div>
         </div>
       </div>
-      <div class="text-gray-500 slice-text-3">
-        {{ body }}
-      </div>
+      <div class="text-gray-500 slice-text-3" v-html="body"></div>
     </div>
   </div>
 </template>

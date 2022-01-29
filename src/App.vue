@@ -3,7 +3,7 @@ import Navbar from "./components/global-components/Navbar.vue";
 import Footer from "./components/global-components/Footer.vue";
 </script>
 <template>
-  <div style="padding-top: 118px; background: #f2f4f6">
+  <div class="xl:pt-118-px pt-70-px" style="background: #f2f4f6">
     <Navbar></Navbar>
     <router-view v-slot="{ Component }">
       <component :is="Component" />
@@ -22,7 +22,12 @@ import Footer from "./components/global-components/Footer.vue";
 .fade-leave-to {
   opacity: 0;
 }
-
+.collapse-enter-active, .collapse-leave-active {
+  transition: max-height .5s;
+}
+.collapse-enter, .collapse-leave-to {
+  max-height: 0 .5s;
+}
 .scale-enter-active {
   transition: transform 0.1s ease-out;
 }

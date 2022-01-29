@@ -5,7 +5,7 @@
         class="grid grid-cols-12 gap-7 pb-12 footer-top"
         style="border-bottom: 1px solid rgba(230, 242, 255, 0.2)"
       >
-        <div class="col-span-3">
+        <div class="lg:col-span-3 md:col-span-4 col-span-12">
           <a href="/" class="nav-logo flex items-center">
             <img src="@/assets/img/logo.png" />
             <p class="ml-1.5">
@@ -14,7 +14,7 @@
             </p>
           </a>
         </div>
-        <div class="col-span-2">
+        <div class="lg:col-span-2 md:col-span-4 sm:col-span-6 col-span-12">
           <h3>Institut</h3>
           <ul>
             <li><a href="#!">Institut nizomi</a></li>
@@ -23,7 +23,7 @@
             <li><a href="#!">Bo‘sh ish o‘rinlar</a></li>
           </ul>
         </div>
-        <div class="col-span-2">
+        <div class="lg:col-span-2 md:col-span-4 sm:col-span-6 col-span-12">
           <h3>Tuzilma</h3>
           <ul>
             <li><a href="#!">Rahbariyat</a></li>
@@ -32,7 +32,7 @@
             <li><a href="#!">Ilmiy kengashlar</a></li>
           </ul>
         </div>
-        <div class="col-span-3">
+        <div class="lg:col-span-3 sm:col-span-6 col-span-12">
           <h3>Matbuot xizmati</h3>
           <ul>
             <li><a href="#!">Yangiliklar</a></li>
@@ -41,7 +41,7 @@
             <li><a href="#!">E’lonlar</a></li>
           </ul>
         </div>
-        <div class="col-span-2">
+        <div class="lg:col-span-2 sm:col-span-6 col-span-12">
           <h3>Kontaktlar</h3>
           <ul>
             <li><a href="#!">Тел.: (0371) 000-00-00</a></li>
@@ -54,7 +54,9 @@
         <p>
           © 2005-2021 FVV Akademiyasi huzuridagi fuqoro muhofazasi instituti
         </p>
-        <img src="../../assets/img/home/info.png" alt="" />
+        <div class="block md:w-auto w-full md:my-0 my-5">
+          <img src="../../assets/img/home/info.png" alt="" />
+        </div>
         <ul>
           <li>
             <a href="#!">
@@ -101,14 +103,14 @@ h3 {
   display: inline-block;
   margin-bottom: 15px;
 }
-.footer-bottom{
+.footer-bottom {
   padding: 14px 0;
 }
-.footer-bottom ul{
+.footer-bottom ul {
   display: flex;
   align-items: center;
 }
-.footer-bottom a{
+.footer-bottom a {
   display: flex;
   align-items: center;
   padding: 0 12px;

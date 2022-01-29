@@ -64,10 +64,31 @@ async function getSlide() {
       new Swiper(".swiper-articles", {
         slidesPerView: 5,
         spaceBetween: 30,
-        freeMode: true,
         navigation: {
           nextEl: ".swiper-articles-next",
           prevEl: ".swiper-articles-prev",
+        },
+        breakpoints: {
+          200: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          500: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+          },
+          1280: {
+            slidesPerView: 5,
+            spaceBetween: 30,
+          },
         },
       });
       loading.value = false;
@@ -99,11 +120,6 @@ async function getPhotos() {
   }
 }
 async function getUsefull() {
-  // const res_usefull = await http.get(`/${i18n.locale.value}/api/usefull/mainPage`);
-  // if (res_usefull.status === 200) {
-  //   usefull.value = res_usefull.data.results;
-  //   console.log(usefull.value);
-  // }
   new Swiper(".swiper-usefull", {
     slidesPerView: 4,
     spaceBetween: 30,
@@ -111,6 +127,28 @@ async function getUsefull() {
     navigation: {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev",
+    },
+    breakpoints: {
+      200: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+      },
+      500: {
+        slidesPerView: 2,
+        spaceBetween: 20,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+      1280: {
+        slidesPerView: 4,
+        spaceBetween: 30,
+      },
     },
   });
 }
@@ -209,7 +247,9 @@ const usefull = ref([
   <div class="home">
     <header>
       <div class="container mx-auto px-4">
-        <div class="header-title max-w-2xl text-white text-3xl pt-28 pb-52">
+        <div
+          class="header-title max-w-2xl text-white md:text-3xl text-2xl md:text-left text-center pt-28 pb-52"
+        >
           <h1>
             "Ilm o‘tda yonmaydigan, suvda cho‘kmaydigan, hech kim sizdan tortib
             ololmaydigan boylik ekanini aslo unutmang!"
@@ -223,7 +263,7 @@ const usefull = ref([
     >
       <img src="@/assets/img/animation_500_kyicu3ga.gif" alt="" />
     </div>
-    <div class="slider-kafedres transform -translate-y-1/3">
+    <div class="slider-kafedres transform lg:-translate-y-1/3 lg:mb-0 mb-8">
       <div
         class="container mx-auto"
         :style="loading ? 'opacity: 0 !important; position:fixed; top-0' : ''"
@@ -251,7 +291,7 @@ const usefull = ref([
     <div class="container mx-auto pb-10 px-4">
       <div class="last-news bg-white p-5 rounded-md">
         <h3 class="text-2xl text-gray-900 mb-4">So‘ngi yangiliklar</h3>
-        <div class="grid grid-cols-12 gap-30">
+        <div class="grid lg:grid-cols-12 grid-cols-1 gap-30">
           <div class="col-span-7">
             <div class="last-news-img mb-4" v-if="lastNew">
               <img
@@ -302,15 +342,17 @@ const usefull = ref([
     <div class="container mx-auto px-4 pb-10">
       <div class="books p-5 bg-white rounded-lg">
         <h3 class="text-2xl text-gray-900 mb-4">Elektron kutubxona</h3>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-2">
+        <div class="grid lg:grid-cols-2 gap-x-5 gap-y-2">
           <div
-            class="book-card py-2 px-4 rounded-lg flex items-center"
+            class="book-card py-2 px-4 rounded-lg flex items-center lg:border-none border border-gray-300"
             v-for="(n, i) in library"
             :key="i"
-            :class="{
-              'bg-gray-200':
-                i == 0 || i == 1 || i == 4 || i == 5 || i == 8 || i == 9,
-            }"
+            :class="[
+              {
+                'lg:bg-gray-200':
+                  i == 0 || i == 1 || i == 4 || i == 5 || i == 8 || i == 9,
+              },
+            ]"
             :id="i"
           >
             <img :src="n.image" class="w-11 h-12" alt="" />
@@ -327,7 +369,7 @@ const usefull = ref([
     <section class="bg-blue-primary pt-5 pb-7">
       <div class="container mx-auto">
         <h2 class="text-center mb-8 text-white text-2xl">Ummumiy statistika</h2>
-        <div class="grid grid-cols-4 gap-8">
+        <div class="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-8">
           <div
             class="flex flex-col items-center"
             v-for="(n, i) in statistics"
@@ -394,7 +436,7 @@ const usefull = ref([
     <div class="container mx-auto px-4 pb-10">
       <section class="photo-video bg-white p-5 rounded-lg">
         <h3 class="text-2xl text-gray-900 mb-4">Foto va video lavhalar</h3>
-        <div class="videos grid grid-cols-2 gap-5 mb-5">
+        <div class="videos grid lg:grid-cols-2 grid-cols-1 gap-5 mb-5">
           <div
             class="card-video relative rounded-lg"
             v-for="(n, i) in videos"
@@ -409,14 +451,16 @@ const usefull = ref([
               class="overlay-video-photo pb-5 pl-5 pr-5 absolute rounded-lg top-0 left-0 w-full h-full flex flex-col justify-between"
             >
               <div></div>
-              <p class="text-white text-2xl slice-text-2">{{ n.title }}</p>
+              <p class="text-white text-2xl slice-text-2 sm:block hidden">
+                {{ n.title }}
+              </p>
             </div>
             <a class="play-btn block cursor-pointer absolute">
               <img src="@/assets/img/home/play.svg" alt="" />
             </a>
           </div>
         </div>
-        <div class="photos grid grid-cols-4 gap-5">
+        <div class="photos grid lg:grid-cols-4 sm:grid-cols-2 gap-5">
           <a
             href="#!"
             @click.prevent
@@ -439,20 +483,22 @@ const usefull = ref([
     <div class="container mx-auto px-4 pb-10">
       <section class="sunscribe bg-white p-5 pb-11 rounded-lg">
         <h3 class="text-2xl text-gray-900 mb-4">Yangiliklarga a`zo bo‘lish</h3>
-        <div class="grid grid-cols-2 gap-8">
-          <div class="flex items-end mb-4 mt-6">
+        <div class="grid xl:grid-cols-2 gap-8">
+          <div class="flex items-end md:flex-nowrap flex-wrap mb-4 mt-6">
             <input
-              class="w-full pb-1 pt-3.5 border-0 border-gray-700 border-b focus:outline-none"
+              class="w-full pb-1 pt-3.5 border-0 border-gray-700 border-b focus:outline-none md:mb-0 mb-4"
               type="text"
               placeholder="E-mail kiriting..."
             />
             <button
-              class="bg-orange-primary py-2.5 px-9 text-white rounded-sm ml-2.5"
+              class="bg-orange-primary py-2.5 px-9 text-white rounded-sm md:ml-2.5"
             >
               Yuborish
             </button>
           </div>
-          <div class="grid grid-cols-2 gap-9 pl-32">
+          <div
+            class="grid xl:grid-cols-2 lg:grid-cols-4 sm:grid-cols-2 gap-9 xl:pl-32"
+          >
             <a
               href="#!"
               class="flex items-center gap-2.5 bg-tg-primary text-white py-3 px-9 rounded-md"
@@ -488,7 +534,7 @@ const usefull = ref([
     <section class="usefull_link bg-thin-yellow-primary pt-6 pb-10 mb-28">
       <div class="container mx-auto px-4">
         <h3 class="text-2xl text-gray-900 mb-4 ml-20">Foydali havolalar</h3>
-        <div class="swiper-container swiper-usefull px-20">
+        <div class="swiper-container swiper-usefull sm:px-20 px-10">
           <div class="swiper-wrapper">
             <div class="swiper-slide h-full" v-for="(n, i) in usefull" :key="i">
               <UsefullCard v-bind="n" />
@@ -557,6 +603,7 @@ header {
 .services-list {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   list-style-type: none;
   justify-content: space-around;
   margin: 0;
@@ -613,5 +660,36 @@ header {
 }
 .play-btn:active {
   transform: translate(-50%, -50%) scale(0.95);
+}
+@media (max-width: 1279px) {
+  .services-link {
+    background: #08457e;
+    margin-bottom: 30px;
+  }
+  .services-link:hover {
+    background: #f2994a;
+  }
+}
+@media (max-width: 1023px) {
+  .services-item {
+    width: 50%;
+    padding: 0 20px;
+  }
+}
+@media (max-width: 767px) {
+  .services-item {
+    width: 100%;
+    padding: 0 20px;
+  }
+  .home .swiper-button-next,
+  .home .swiper-button-prev {
+    background: rgba(255, 211, 172, 0.7);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

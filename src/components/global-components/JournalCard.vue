@@ -11,7 +11,10 @@ defineProps(["thumbnail", "title", "body", "date", "views"]);
       <div class="card-title slice-text-2 text-gray-900 font-bold mb-1">
         {{ title }}
       </div>
-      <div class="card-body slice-text-3 text-gray-900 mb-1">{{ body }}</div>
+      <div
+        class="card-body slice-text-3 text-gray-900 mb-1"
+        v-html="body"
+      ></div>
       <div>
         <div class="card-footer flex items-center">
           <div class="card-footer-item flex items-center">
