@@ -14,11 +14,11 @@ defineProps([
 </script>
 <template>
   <div class="card bg-white rounded-md p-5">
-    <div class="card-info grid grid-cols-3 gap-3.5 mb-6">
-      <div class="col-span-1">
+    <div class="card-info grid sm:grid-cols-3 gap-3.5 mb-6">
+      <div class="sm:col-span-1">
         <img :src="image" alt="" class="w-full object-cover" />
       </div>
-      <div class="col-span-2">
+      <div class="sm:col-span-2">
         <div>
           <h3 class="uppercase mb-1 text-lg">
             {{ last_name }} 
@@ -37,7 +37,7 @@ defineProps([
       </div>
     </div>
     <div class="card-contact">
-      <ul class="grid grid-cols-2 gap-5">
+      <ul class="grid lg:grid-cols-2 gap-5">
         <li>
           <a href="#!" class="flex items-center">
             <div

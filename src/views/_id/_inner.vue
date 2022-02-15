@@ -12,7 +12,6 @@ const i18n = useI18n();
 const data = ref([]);
 const dataResults = ref([]);
 const category = ref(null);
-console.log(route.params);
 class Methods {
   async byParentId() {
     let url = `/${i18n.locale.value}/api/${route.params.typeId}/${route.params.innerId}/`;
@@ -38,6 +37,10 @@ class Methods {
         month: "numeric",
         day: "numeric",
       });
+      const html = document.createElement("div");
+      html.innerHTML = dataResults.value.body;
+      const body = html.innerText;
+      dataResults.value.body = body;
     } catch (error) {
       console.log(error);
     }
@@ -46,13 +49,37 @@ class Methods {
 const { byParentId, getContent } = new Methods();
 onMounted(async () => {
   await getContent();
+  console.clear();
+  localStorage.setItem(
+    "title",
+    dataResults.value.title || dataResults.value.rank
+  );
+  document.querySelector("title").innerText = localStorage.getItem("title");
 });
 watch(
   () => route.params,
   async (val) => {
     if (val.innerId) {
       await getContent();
+      console.clear();
+      localStorage.setItem(
+        "title",
+        dataResults.value.title || dataResults.value.rank
+      );
+      document.querySelector("title").innerText = localStorage.getItem("title");
     }
+  }
+);
+watch(
+  () => i18n.locale.value,
+  async () => {
+    await getContent();
+    console.clear();
+    localStorage.setItem(
+      "title",
+      dataResults.value.title || dataResults.value.rank
+    );
+    document.querySelector("title").innerText = localStorage.getItem("title");
   }
 );
 </script>
@@ -73,8 +100,8 @@ watch(
       class="container mx-auto px-4"
       :class="route.params.typeId == 'leaderships' ? 'mt-10' : 'mt-32'"
     >
-      <div class="grid grid-cols-3 gap-8">
-        <div class="col-span-2">
+      <div class="grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
           <h1 class="text-3xl font-bold bg-white p-5 rounded-lg mb-5">
             {{ dataResults.title || dataResults.rank }}
           </h1>
@@ -85,7 +112,7 @@ watch(
               alt=""
               v-if="route.params.typeId !== 'leaderships'"
             />
-            <div v-else class="grid grid-cols-2">
+            <div v-else class="grid md:grid-cols-2">
               <CardLidership v-bind="dataResults" />
             </div>
             <div
@@ -93,7 +120,7 @@ watch(
               class="flex items-center mb-3"
             >
               <div class="card-footer flex items-center">
-                <div class="card-footer-item flex items-center">
+                <div class="card-footer-item flex items-center flex-wrap">
                   <img src="@/assets/icon/calendar.svg" alt="" />
                   <span class="text-gray-600 inline-block ml-2">
                     {{ dataResults.date }}
@@ -120,7 +147,7 @@ watch(
           </div>
         </div>
         <div>
-          <RigthAside/>
+          <RigthAside />
         </div>
       </div>
     </div>

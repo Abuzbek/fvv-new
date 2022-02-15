@@ -1,6 +1,10 @@
 <script setup>
 import { defineProps } from "vue";
-defineProps(["title", "thumbnail", "body", "date", "views", "isOdd"]);
+const props = defineProps(["title", "thumbnail", "body", "date", "views", "isOdd"]);
+const html = document.createElement("div");
+html.innerHTML = props.body;
+const body = html.innerText;
+props.body = body;
 </script>
 <template>
   <div class="card p-5 rounded-lg grid grid-cols-4 gap-5 bg-white">

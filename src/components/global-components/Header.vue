@@ -4,8 +4,8 @@ defineProps(["subtitle", "image"]);
 </script>
 <template>
   <header class="pt-14 pb-14 relative overflow-hidden bg-white">
-    <div class="container mx-auto z-20 relative">
-      <div class="header-title pt-32 pb-32 grid grid-cols-2 gap-6">
+    <div class="container mx-auto z-20 relative px-4 md:text-left text-center">
+      <div class="header-title pt-32 pb-32 grid xl:grid-cols-2 gap-6">
         <div>
           <h1 class="text-4xl">
             {{ subtitle }}
@@ -14,7 +14,7 @@ defineProps(["subtitle", "image"]);
       </div>
     </div>
     <div
-      class="absolute top-0 w-full h-full grid grid-cols-3 z-10"
+      class="absolute top-0 w-full h-full grid-cols-3 z-10 xl:grid hidden"
       :class="'container left-1/2 transform -translate-x-1/2 px-4'"
     >
       <div></div>

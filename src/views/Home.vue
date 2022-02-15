@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "@vue/runtime-core";
+import { defineComponent, onMounted, ref, watch } from "@vue/runtime-core";
 import Swiper from "swiper";
 import http from "@/hooks/http";
 import types from "@/hooks/globalTypes";
@@ -7,15 +7,32 @@ import img1 from "@/assets/img/home/user.svg";
 import img2 from "@/assets/img/home/list.svg";
 import img3 from "@/assets/img/home/check.svg";
 import img4 from "@/assets/img/home/pen.svg";
-import herb from "../assets/img/home/herb.png";
 // import { useStore } from "vuex";
 // import { useRouter } from "vue-router";
+// import { useRoute } from "vue-router";
+// const route = useRoute();
 import { useI18n } from "vue-i18n";
 import HomeMiniCard from "@/components/global-components/HomeMiniCard.vue";
 import UsefullCard from "../components/global-components/UsefullCard.vue";
+import LightGallery from "../components/global-components/LightGallery.vue";
+defineComponent({
+  metaInfo: {
+    title: "My Example App",
+  },
+});
 // const store = useStore();
 // const router = useRouter();
 const i18n = useI18n();
+const showPhoto = ref(false);
+const showVideo = ref(false);
+const soc_links = ref({});
+
+const attachment = ref({
+  src: "",
+  idx: 0,
+  title: "",
+});
+const { t } = useI18n();
 //  ====== get Data ======
 async function getData(type, id, options = { page: 1, page_size: 10 }) {
   return await http({
@@ -64,6 +81,11 @@ async function getSlide() {
       new Swiper(".swiper-articles", {
         slidesPerView: 5,
         spaceBetween: 30,
+        loop: true,
+        autoplay: {
+          delay: 2500,
+          disableOnInteraction: false,
+        },
         navigation: {
           nextEl: ".swiper-articles-next",
           prevEl: ".swiper-articles-prev",
@@ -103,75 +125,189 @@ async function getLibrary() {
 }
 async function getVideos() {
   const res_videos = await http.get(
-    `/${i18n.locale.value}/api/videos/mainPage`
+    `/${i18n.locale.value}/api/videos/mainPage/?page_size=3`
   );
   if (res_videos.status === 200) {
     videos.value = res_videos.data.results;
-    console.log(videos.value);
   }
 }
 async function getPhotos() {
   const res_photos = await http.get(
-    `/${i18n.locale.value}/api/photos/mainPage`
+    `/${i18n.locale.value}/api/photos/mainPage/?page_size=4`
   );
   if (res_photos.status === 200) {
     photos.value = res_photos.data.results;
-    console.log(photos.value);
   }
 }
 async function getUsefull() {
-  new Swiper(".swiper-usefull", {
-    slidesPerView: 4,
-    spaceBetween: 30,
-    freeMode: true,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    breakpoints: {
-      200: {
-        slidesPerView: 1,
-        spaceBetween: 20,
-      },
-      500: {
-        slidesPerView: 2,
-        spaceBetween: 20,
-      },
-      768: {
-        slidesPerView: 2,
-        spaceBetween: 30,
-      },
-      1024: {
-        slidesPerView: 3,
-        spaceBetween: 30,
-      },
-      1280: {
+  const resp = await http.get(`/${i18n.locale.value}/api/useful_links/`);
+  if (resp.status === 200) {
+    usefull.value = resp.data;
+    setTimeout(() => {
+      new Swiper(".swiper-usefull", {
         slidesPerView: 4,
         spaceBetween: 30,
-      },
-    },
+        freeMode: true,
+        loop: true,
+        autoplay: {
+          delay: 2500,
+          disableOnInteraction: false,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+          200: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          500: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 30,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+          },
+          1280: {
+            slidesPerView: 4,
+            spaceBetween: 30,
+          },
+        },
+      });
+    }, 1000);
+  }
+}
+async function fetchData() {
+  await getNews();
+  await getSlide();
+  await getLibrary();
+  await getVideos();
+  await getPhotos();
+  await getUsefull();
+}
+function nextPhoto(idx) {
+  attachment.value = {
+    src: photos.value[idx].photo,
+    idx: idx,
+    title: photos.value[idx].title,
+  };
+}
+function prevPhoto(idx) {
+  attachment.value = {
+    src: photos.value[idx].photo,
+    idx: idx,
+    title: photos.value[idx].title,
+  };
+}
+function hidePhoto() {
+  showPhoto.value = false;
+}
+function nextVideo(idx) {
+  let splity = videos.value[idx].video_path.split("/");
+  splity = splity[splity.length - 1];
+  attachment.value = {
+    src: splity,
+    idx: idx,
+    title: videos.value[idx].title,
+  };
+}
+function prevVideo(idx) {
+  let splity = videos.value[idx].video_path.split("/");
+  splity = splity[splity.length - 1];
+  attachment.value = {
+    src: splity,
+    idx: idx,
+    title: videos.value[idx].title,
+  };
+}
+function hideVideo() {
+  showVideo.value = false;
+}
+function clickVideo(id) {
+  videos.value.find((n, i) => {
+    if (n.id == id) {
+      if (videos.value[i].video_path.includes("yout")) {
+        let splity = videos.value[i].video_path.split("/");
+        splity = splity[splity.length - 1];
+        attachment.value = {
+          src: splity,
+          idx: i,
+          title: videos.value[i].title,
+        };
+      } else {
+        attachment.value = {
+          src: videos.value[i].video_path,
+          idx: i,
+          title: videos.value[i].title,
+        };
+      }
+    }
   });
+  showVideo.value = true;
+}
+function clickPhoto(id) {
+  photos.value.find((n, i) => {
+    if (n.id == id) {
+      console.log(photos.value[i]);
+      attachment.value = {
+        src: photos.value[i].photo,
+        idx: i,
+        title: photos.value[i].title,
+      };
+    }
+  });
+  showPhoto.value = true;
 }
 // =====  get Sections =====
 onMounted(async () => {
-  // ===== news =====
-  await getNews();
-  // ===== news =====
-  // ===== slide =====
-  await getSlide();
-  // ===== slide =====
-  // ===== library =====
-  await getLibrary();
-  // ===== library =====
-  // ===== videos =====
-  await getVideos();
-  // ===== videos =====
-  // ===== photos =====
-  await getPhotos();
-  // ===== photos =====
-  await getUsefull();
+  await fetchData();
+  const socLinks = await http.get(`/api/social_links/`);
+  soc_links.value = socLinks.data;
+  // console.clear();
+  localStorage.setItem("title", t("name"));
+  document.querySelector("title").innerText = localStorage.getItem("title");
 });
-
+watch(
+  () => i18n.locale.value,
+  async () => {
+    await fetchData();
+    // console.clear();
+    localStorage.setItem("title", t("name"));
+    document.querySelector("title").innerText = localStorage.getItem("title");
+    statistics.value = [
+      {
+        count: "10 000",
+        title: t("departament"),
+        img: img1,
+        color: "#F23E2C",
+      },
+      {
+        count: "57 841",
+        title: t("directions"),
+        img: img2,
+        color: "#2C6AF2",
+      },
+      {
+        count: "500",
+        title: t("teachers"),
+        img: img3,
+        color: "#26AB5B",
+      },
+      {
+        count: "1 000",
+        title: t("students"),
+        img: img4,
+        color: "#F5FFEF",
+      },
+    ];
+  }
+);
 // ==== canfedres type state ====
 const typeArticle = ref(null);
 // ==== canfedres type state ====
@@ -189,70 +325,44 @@ const library = ref([]);
 const statistics = ref([
   {
     count: "10 000",
-    title: "Kafedralar",
+    title: t("departament"),
     img: img1,
     color: "#F23E2C",
   },
   {
     count: "57 841",
-    title: "Yo‘nalishlar",
+    title: t("directions"),
     img: img2,
     color: "#2C6AF2",
   },
   {
     count: "500",
-    title: "O'qituvchilar",
+    title: t("teachers"),
     img: img3,
     color: "#26AB5B",
   },
   {
     count: "1 000",
-    title: "O'qituvchilar",
+    title: t("students"),
     img: img4,
-    color: "#C1C1C1",
+    color: "#F5FFEF",
   },
 ]);
 const loading = ref(true);
 const videos = ref([]);
 const photos = ref([]);
-const usefull = ref([
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-  {
-    title: "O'zbekiston Respublikasi Prezidentining rasmiy veb-sayti",
-    thumbnail: herb,
-  },
-]);
+const usefull = ref([]);
 </script>
 
-<template>
+<template> 
   <div class="home">
     <header>
       <div class="container mx-auto px-4">
         <div
-          class="header-title max-w-2xl text-white md:text-3xl text-2xl md:text-left text-center pt-28 pb-52"
+          class="header-title max-w-2xl text-white md:text-left text-center pt-28 pb-52"
         >
-          <h1>
-            "Ilm o‘tda yonmaydigan, suvda cho‘kmaydigan, hech kim sizdan tortib
-            ololmaydigan boylik ekanini aslo unutmang!"
+          <h1 class="md:text-3xl text-2xl">
+            {{ t("header_title") }}
           </h1>
         </div>
       </div>
@@ -263,21 +373,22 @@ const usefull = ref([
     >
       <img src="@/assets/img/animation_500_kyicu3ga.gif" alt="" />
     </div>
-    <div class="slider-kafedres transform lg:-translate-y-1/3 lg:mb-0 mb-8">
+    <div class="slider-kafedres transform lg:-translate-y-1/4 lg:mb-0 mb-8">
       <div
         class="container mx-auto"
         :style="loading ? 'opacity: 0 !important; position:fixed; top-0' : ''"
       >
-        <div class="swiper-container swiper-articles px-20">
+        <div class="swiper-container swiper-articles md:px-10 px-20">
           <div class="swiper-wrapper items-stretch">
-            <div
-              class="swiper-slide"
+            <router-link
+              to="/kafedralar"
+              class="swiper-slide block"
               v-for="(n, i) in slides"
               :key="i"
               style="height: auto"
             >
               <HomeMiniCard v-bind="n" />
-            </div>
+            </router-link>
           </div>
           <div class="swiper-button-next swiper-articles-next">
             <img src="@/assets/icon/next.svg" alt="" />
@@ -288,9 +399,13 @@ const usefull = ref([
         </div>
       </div>
     </div>
-    <div class="container mx-auto pb-10 px-4">
+    <div class="container mx-auto pb-10 px-4" v-if="lastNew">
       <div class="last-news bg-white p-5 rounded-md">
-        <h3 class="text-2xl text-gray-900 mb-4">So‘ngi yangiliklar</h3>
+        <router-link
+          class="text-3xl text-gray-900 inline-block mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+          :to="'/yangiliklar'"
+          >{{ t("last_news") }}</router-link
+        >
         <div class="grid lg:grid-cols-12 grid-cols-1 gap-30">
           <div class="col-span-7">
             <div class="last-news-img mb-4" v-if="lastNew">
@@ -305,9 +420,12 @@ const usefull = ref([
               {{ lastNew.date }}
             </div>
             <div v-if="lastNew" class="last-news-title">
-              <a :href="`/news/${lastNew.slug}`" class="text-xl text-gray-900">
+              <router-link
+                :to="`/yangiliklar/articles/${lastNew.slug}`"
+                class="text-xl text-gray-900"
+              >
                 {{ lastNew.title }}
-              </a>
+              </router-link>
             </div>
           </div>
           <div class="col-span-5">
@@ -317,23 +435,30 @@ const usefull = ref([
                 v-for="(n, i) in lastNews"
                 :key="i"
               >
-                <div class="last-news-date text-gray-500">
-                  {{ n.date }}
-                </div>
-                <div class="last-news-title">
-                  <a :href="`/news/${n.slug}`" class="text-xl text-gray-900">
-                    {{ n.title }}
-                  </a>
-                  <p class="slice-text text-gray-500">{{ n.body }}</p>
-                </div>
+                <router-link
+                  :to="`/yangiliklar/articles/${n.slug}`"
+                  class="inline-block cursor-pointer"
+                >
+                  <span class="last-news-date text-gray-500">
+                    {{ n.date }}
+                  </span>
+
+                  <div class="last-news-title">
+                    <span class="text-xl text-gray-900">
+                      {{ n.title }}
+                    </span>
+                    <p class="slice-text text-gray-500">{{ n.body }}</p>
+                  </div>
+                </router-link>
               </li>
             </ul>
             <div class="text-center">
               <router-link
-                :to="'/'"
+                :to="'/yangiliklar'"
                 class="text-orange-primary border-b text-lg border-orange-primary pb-0.5"
-                >Barcha yangiliklar</router-link
               >
+                {{ t("all_news") }}
+              </router-link>
             </div>
           </div>
         </div>
@@ -341,7 +466,12 @@ const usefull = ref([
     </div>
     <div class="container mx-auto px-4 pb-10">
       <div class="books p-5 bg-white rounded-lg">
-        <h3 class="text-2xl text-gray-900 mb-4">Elektron kutubxona</h3>
+        <router-link
+          to="/oquv-qollanmalar"
+          class="text-3xl inline-block text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+        >
+          {{ t("electronic_library") }}
+        </router-link>
         <div class="grid lg:grid-cols-2 gap-x-5 gap-y-2">
           <div
             class="book-card py-2 px-4 rounded-lg flex items-center lg:border-none border border-gray-300"
@@ -356,19 +486,22 @@ const usefull = ref([
             :id="i"
           >
             <img :src="n.image" class="w-11 h-12" alt="" />
-            <router-link
+            <a
               class="ml-2.5 text-lg border-b border-transparent hover:border-gray-900 text-gray-900"
-              to="#!"
+              :href="n.file"
+              target="_blank"
             >
               {{ n.title }}
-            </router-link>
+            </a>
           </div>
         </div>
       </div>
     </div>
     <section class="bg-blue-primary pt-5 pb-7">
       <div class="container mx-auto">
-        <h2 class="text-center mb-8 text-white text-2xl">Ummumiy statistika</h2>
+        <h2 class="text-center mb-8 text-white text-3xl font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+          {{ t("general_statistics") }}
+        </h2>
         <div class="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-8">
           <div
             class="flex flex-col items-center"
@@ -389,54 +522,55 @@ const usefull = ref([
     </section>
     <section class="pt-24 pb-28">
       <div class="container mx-auto px-4">
-        <h4 class="text-center mb-8 text-2xl">Interaktiv xizmatlar</h4>
+        <h4 class="text-center mb-8 text-5xl font-semibold">
+          {{ t("interactive_services") }}
+        </h4>
         <ul class="services-list">
           <li class="services-item">
-            <nuxt-link to="/rahbariyatga-murojaat" class="services-link">
+            <router-link to="/dars-jadvali" class="services-link">
               <img
                 src="@/assets/img/ser.svg"
                 alt="services"
                 class="services-img"
               />
-              <p class="services-text">
-                Onlayn - <br />
-                qabulxona
-              </p>
-            </nuxt-link>
+              <p class="services-text" v-html="t('online__lobby')"></p>
+            </router-link>
           </li>
           <li class="services-item">
-            <nuxt-link to="/rahbariyatga-murojaat" class="services-link">
+            <router-link to="/contact-info" class="services-link">
               <img
                 src="@/assets/img/ser2.svg"
                 alt="services"
                 class="services-img"
               />
-              <p class="services-text">
-                O‘qish uchun <br />
-                to‘lovlar
-              </p>
-            </nuxt-link>
+              <p class="services-text" v-html="t('to_read_payments')"></p>
+            </router-link>
           </li>
           <li class="services-item">
-            <nuxt-link to="/rahbariyatga-murojaat" class="services-link">
+            <router-link to="/rahbariyatga-murojaat" class="services-link">
               <img
                 src="@/assets/img/ser3.svg"
                 alt="services"
                 class="services-img"
               />
-              <p class="services-text">
-                Rahbariyatga <br />
-                murojaat
-              </p>
-            </nuxt-link>
+              <p
+                class="services-text"
+                v-html="t('to_the_management_appeal')"
+              ></p>
+            </router-link>
           </li>
         </ul>
       </div>
     </section>
     <div class="container mx-auto px-4 pb-10">
-      <section class="photo-video bg-white p-5 rounded-lg">
-        <h3 class="text-2xl text-gray-900 mb-4">Foto va video lavhalar</h3>
-        <div class="videos grid lg:grid-cols-2 grid-cols-1 gap-5 mb-5">
+      <section class="photo-video bg-white p-5 rounded-lg  mb-5">
+        <router-link
+          to="/video-fayllar"
+          class="inline-block text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+        >
+          {{ t("video_clips") }}
+        </router-link>
+        <div class="videos grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5">
           <div
             class="card-video relative rounded-lg"
             v-for="(n, i) in videos"
@@ -455,11 +589,22 @@ const usefull = ref([
                 {{ n.title }}
               </p>
             </div>
-            <a class="play-btn block cursor-pointer absolute">
+            <a
+              class="play-btn block cursor-pointer absolute"
+              @click.prevent="clickVideo(n.id)"
+            >
               <img src="@/assets/img/home/play.svg" alt="" />
             </a>
           </div>
         </div>
+      </section>
+      <section class="photo-video bg-white p-5 rounded-lg">
+        <router-link
+          to="/foto-fayllar"
+          class="inline-block text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+        >
+          {{ t("photo_clips") }}
+        </router-link>
         <div class="photos grid lg:grid-cols-4 sm:grid-cols-2 gap-5">
           <a
             href="#!"
@@ -467,6 +612,7 @@ const usefull = ref([
             class="card-video relative rounded-lg block"
             v-for="(n, i) in photos"
             :key="i"
+            @click="clickPhoto(n.id)"
           >
             <img
               :src="n.photo"
@@ -482,46 +628,52 @@ const usefull = ref([
     </div>
     <div class="container mx-auto px-4 pb-10">
       <section class="sunscribe bg-white p-5 pb-11 rounded-lg">
-        <h3 class="text-2xl text-gray-900 mb-4">Yangiliklarga a`zo bo‘lish</h3>
+        <h3 class="text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+          {{ t("subscribe_to_news") }}
+        </h3>
         <div class="grid xl:grid-cols-2 gap-8">
           <div class="flex items-end md:flex-nowrap flex-wrap mb-4 mt-6">
             <input
               class="w-full pb-1 pt-3.5 border-0 border-gray-700 border-b focus:outline-none md:mb-0 mb-4"
               type="text"
-              placeholder="E-mail kiriting..."
+              :placeholder="t('enter_your_email')"
             />
             <button
               class="bg-orange-primary py-2.5 px-9 text-white rounded-sm md:ml-2.5"
             >
-              Yuborish
+              {{ t("send") }}
             </button>
           </div>
           <div
             class="grid xl:grid-cols-2 lg:grid-cols-4 sm:grid-cols-2 gap-9 xl:pl-32"
           >
             <a
-              href="#!"
+              target="_blank"
+              :href="soc_links.telegram_url"
               class="flex items-center gap-2.5 bg-tg-primary text-white py-3 px-9 rounded-md"
             >
               <img src="../assets/img/home/tg.svg" alt="" />
               <span>Telegram</span>
             </a>
             <a
-              href="#!"
+              target="_blank"
+              :href="soc_links.instagram_url"
               class="flex items-center gap-2.5 bg-insta-primary text-white py-3 px-9 rounded-md"
             >
               <img src="../assets/img/home/inst.svg" alt="" />
               <span>Instagram</span>
             </a>
             <a
-              href="#!"
+              target="_blank"
+              :href="soc_links.facebook_url"
               class="flex items-center gap-2.5 text-white py-3 px-9 bg-fb-primary rounded-md"
             >
               <img src="../assets/img/home/fb.svg" alt="" />
               <span>Facebook</span>
             </a>
             <a
-              href="#!"
+              target="_blank"
+              :href="soc_links.youtube_url"
               class="flex items-center gap-2.5 text-white py-3 px-9 bg-yt-primary rounded-md"
             >
               <img src="../assets/img/home/youtube.svg" alt="" />
@@ -533,7 +685,9 @@ const usefull = ref([
     </div>
     <section class="usefull_link bg-thin-yellow-primary pt-6 pb-10 mb-28">
       <div class="container mx-auto px-4">
-        <h3 class="text-2xl text-gray-900 mb-4 ml-20">Foydali havolalar</h3>
+        <h3 class="text-3xl text-gray-900 mb-4  ml-20 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+          {{ t("useful_links") }}
+        </h3>
         <div class="swiper-container swiper-usefull sm:px-20 px-10">
           <div class="swiper-wrapper">
             <div class="swiper-slide h-full" v-for="(n, i) in usefull" :key="i">
@@ -549,6 +703,43 @@ const usefull = ref([
         </div>
       </div>
     </section>
+    <LightGallery
+      :show="showPhoto"
+      @removeLight="hidePhoto"
+      :gallerySize="photos.length - 1"
+      :currentGallery="attachment.idx"
+      @next="nextPhoto"
+      @prev="prevPhoto"
+    >
+      <template v-slot:img>
+        <transition name="transformX">
+          <img
+            :src="attachment.src"
+            alt=""
+            class="max-w-2xl w-full object-cover"
+          />
+        </transition>
+      </template>
+    </LightGallery>
+    <LightGallery
+      :show="showVideo"
+      @removeLight="hideVideo"
+      :gallerySize="videos.length - 1"
+      :currentGallery="attachment.idx"
+      @next="nextVideo"
+      @prev="prevVideo"
+    >
+      <template v-slot:img>
+        <transition name="transformX">
+          <iframe
+            class="w-full max-w-2xl h-80 pointer-events-auto"
+            :src="'https://www.youtube.com/embed/' + attachment.src"
+            :title="attachment.title"
+            frameborder="0"
+          ></iframe>
+        </transition>
+      </template>
+    </LightGallery>
   </div>
 </template>
 
@@ -573,6 +764,9 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.swiper-button-disabled {
+  display: none !important;
 }
 .slice-text {
   overflow: hidden;

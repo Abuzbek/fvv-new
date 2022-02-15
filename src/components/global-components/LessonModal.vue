@@ -9,9 +9,6 @@ day.value = new Date(props.date).toLocaleString("default", { day: "numeric" });
 year.value = new Date(props.date).toLocaleString("default", {
   year: "numeric",
 });
-console.log(month.value);
-console.log(day.value);
-console.log(year.value);
 const data = ref(props.data);
 data.value = data.value.map((item) => {
   return {

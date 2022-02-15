@@ -23,10 +23,15 @@ function copy() {
 </script>
 <template>
   <div class="pb-14">
-    <div class="mb-5">
-      <div v-for="(n, i) in result" class="mb-5" :key="i">
+    <div class="mb-5 lg:block grid md:grid-cols-2 gap-6">
+      <router-link
+        :to="`/yangiliklar`"
+        v-for="(n, i) in result"
+        class="mb-5 "
+        :key="i"
+      >
         <BaseCard v-bind="n" />
-      </div>
+      </router-link>
     </div>
     <div class="card_share bg-white rounded-md px-1.5 py-2">
       <ul>

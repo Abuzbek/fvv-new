@@ -39,13 +39,22 @@ class Methods {
 const { byParentId, getContent } = new Methods();
 onMounted(async () => {
   await getContent();
+console.clear()
 });
 watch(
   () => route.params,
   async (val) => {
     if (val.bookId) {
       await getContent();
+console.clear()
     }
+  }
+);
+watch(
+  () => i18n.locale.value,
+  async () => {
+      await getContent();
+console.clear()
   }
 );
 </script>

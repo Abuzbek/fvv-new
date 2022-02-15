@@ -21,7 +21,7 @@ const route = useRoute();
 // const router = useRouter();
 const i18n = useI18n();
 const perPageGrid = ref(9);
-const perPage = ref(2);
+const perPage = ref(6);
 const type = ref("");
 const data = ref([]);
 const dataResults = ref([]);
@@ -72,6 +72,8 @@ const lesson = ref(null);
 const groupValue = ref("");
 const schedule = ref(null);
 const isPaginate = ref(null);
+const photos = ref([]);
+const showPhoto = ref(false);
 class Methods {
   async byCategoryId(type, id, filter) {
     const typeOF = globalTypes.find((n) => {
@@ -172,7 +174,6 @@ class Methods {
   }
   async clickSchema(value) {
     filter.value.shift = schema.value.find((n) => n.value === value).value;
-    console.log(filter.value.shift);
     filter.value.p = 1;
     schemaTitle.value = filter.value.shift.title;
     isSchema.value = false;
@@ -242,7 +243,37 @@ class Methods {
       await getContent("schedule");
     } else {
       await getContent();
+      console.clear();
     }
+  }
+  nextPhoto(idx) {
+    attachment.value = {
+      src: photos.value[idx].photo,
+      idx: idx,
+      title: photos.value[idx].title,
+    };
+  }
+  prevPhoto(idx) {
+    attachment.value = {
+      src: photos.value[idx].photo,
+      idx: idx,
+      title: photos.value[idx].title,
+    };
+  }
+  hidePhoto() {
+    showPhoto.value = false;
+  }
+  clickPhoto(id) {
+    photos.value.find((n, i) => {
+      if (n.id == id) {
+        attachment.value = {
+          src: photos.value[i].photo,
+          idx: i,
+          title: photos.value[i].title,
+        };
+      }
+    });
+    showPhoto.value = true;
   }
 }
 const {
@@ -258,15 +289,25 @@ const {
   hideLight,
   nextGallery,
   prevGallery,
+  nextPhoto,
+  prevPhoto,
+  hidePhoto,
+  clickPhoto
 } = new Methods();
 onMounted(async () => {
   await getContent();
+  console.clear();
+  localStorage.setItem("title", category.value.name);
+  document.querySelector("title").innerText = localStorage.getItem("title");
 });
 watch(
   () => route.params,
   async (val) => {
     if (!val.bookId && val.id) {
       await getContent();
+      console.clear();
+      localStorage.setItem("title", category.value.name);
+      document.querySelector("title").innerText = localStorage.getItem("title");
     }
   }
 );
@@ -307,6 +348,15 @@ watch(
     }
   }
 );
+watch(
+  () => i18n.locale.value,
+  async () => {
+    await getContent();
+    console.clear();
+    localStorage.setItem("title", category.value.name);
+    document.querySelector("title").innerText = localStorage.getItem("title");
+  }
+);
 </script>
 <template>
   <div>
@@ -323,7 +373,7 @@ watch(
     </div>
     <div class="container mx-auto px-4">
       <div
-        class="mt-10 grid grid-cols-2 bg-white rounded-lg p-5 gap-5 mb-12"
+        class="mt-10 grid md:grid-cols-2 bg-white rounded-lg p-5 gap-5 mb-12"
         v-if="type == 'document'"
       >
         <h2 v-if="category" class="col-span-2 text-2xl mb-3">
@@ -339,10 +389,10 @@ watch(
         </div>
       </div>
       <div
-        class="mt-10 grid grid-cols-2 bg-white rounded-lg p-5 gap-5 mb-12"
+        class="mt-10 grid md:grid-cols-2 bg-white rounded-lg p-5 gap-5 mb-12"
         v-else-if="type == 'timeline'"
       >
-        <h2 v-if="category" class="col-span-2 text-2xl mb-3">
+        <h2 v-if="category" class="md:col-span-2 text-2xl mb-3">
           {{ category.name }}
         </h2>
         <div v-for="(n, i) in dataResults" :key="i">
@@ -388,7 +438,7 @@ watch(
         <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
           {{ category.name }}
         </h2>
-        <div class="grid grid-cols-4 gap-8">
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link
               class="block h-full card"
@@ -422,9 +472,37 @@ watch(
         <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
           {{ category.name }}
         </h2>
-        <div class="grid grid-cols-4 gap-8">
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <VideoCard v-bind="n" @click="clickVideo" />
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 mb-12" v-else-if="type == 'photo_gallery'">
+        <LightGallery
+          :show="showPhoto"
+          @removeLight="hidePhoto"
+          :gallerySize="photos.length - 1"
+          :currentGallery="attachment.idx"
+          @next="nextPhoto"
+          @prev="prevPhoto"
+        >
+          <template v-slot:img>
+            <transition name="transformX">
+              <img
+                :src="attachment.src"
+                alt=""
+                class="max-w-2xl w-full object-cover"
+              />
+            </transition>
+          </template>
+        </LightGallery>
+        <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
+          {{ category.name }}
+        </h2>
+        <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8">
+          <div v-for="(n, i) in dataResults" :key="i">
+            <VideoCard v-bind="n" @click="clickPhoto" />
           </div>
         </div>
       </div>
@@ -432,7 +510,7 @@ watch(
         <h2 v-if="category" class="text-2xl mb-8 bg-white rounded-lg p-5">
           {{ category.name }}
         </h2>
-        <div class="grid xl:grid-cols-4 grid-cols-3 gap-8">
+        <div class="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link class="block card" :to="`/${route.params.id}/${n.id}`">
               <BookCard v-bind="n" />
@@ -456,7 +534,9 @@ watch(
           :date="schedule.date"
           :data="lesson"
         />
-        <div class="grid grid-cols-4 gap-2.5 mb-8">
+        <div
+          class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-2.5 mb-8"
+        >
           <div>
             <div
               class="text-gray-600 bg-white flex items-center py-2.5 px-3.5 rounded-md"
@@ -622,7 +702,9 @@ watch(
             </div>
           </div>
         </div>
-        <div class="grid 2xl:grid-cols-6 xl:grid-cols-4 gap-8">
+        <div
+          class="grid 2xl:grid-cols-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-8"
+        >
           <div v-for="(n, i) in dataResults" :key="i">
             <ScheduleCard v-bind="n" @click="getLessons" />
           </div>
@@ -632,7 +714,7 @@ watch(
         <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
           {{ category.name }}
         </h2>
-        <div class="grid grid-cols-3 gap-8">
+        <div class="grid xl:grid-cols-3 md:grid-cols-2 md gap-8">
           <div v-for="(n, i) in dataResults" :key="i">
             <router-link
               class="block card"
@@ -644,9 +726,6 @@ watch(
         </div>
       </div>
       <div class="mt-10 mb-12" v-else-if="type == 'single_page'">
-        <h2 v-if="category" class="text-2xl mb-3 bg-white rounded-lg p-5">
-          {{ category.name }}
-        </h2>
         <div class="bg-white rounded-lg p-5">
           <div v-for="(n, i) in dataResults" :key="i">
             <h3 class="text-2xl mb-5">{{ n.title }}</h3>

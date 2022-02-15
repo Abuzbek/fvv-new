@@ -1,6 +1,10 @@
 <script setup>
 import { defineProps } from "vue";
-defineProps(["thumbnail", "title", "body", "date", "views"]);
+const props = defineProps(["thumbnail", "title", "body", "date", "views"]);
+const html = document.createElement("div");
+html.innerHTML = props.body;
+const body = html.innerText;
+props.body = body;
 </script>
 <template>
   <div class="bg-white rounded-md p-5">

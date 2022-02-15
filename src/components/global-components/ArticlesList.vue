@@ -1,9 +1,13 @@
 <script setup>
 import { defineProps } from "vue";
-defineProps(["thumbnail", "title", "body", "date", "views"]);
+const props = defineProps(["thumbnail", "title", "body", "date", "views"]);
+const html = document.createElement("div");
+html.innerHTML = props.body;
+const body = html.innerText;
+props.body = body;
 </script>
 <template>
-  <div class="card  py-4 grid grid-cols-4 gap-5">
+  <div class="card py-4 grid grid-cols-4 gap-5">
     <div class="card-img rounded-lg">
       <img :src="thumbnail" :alt="id" class="rounded-lg" />
     </div>
@@ -25,8 +29,10 @@ defineProps(["thumbnail", "title", "body", "date", "views"]);
         >
           {{ title }}
         </div>
-        <div class="card-body slice-text-3 text-lg text-gray-900 mb-1 slice-text-4" v-html="body">
-        </div>
+        <div
+          class="card-body slice-text-3 text-lg text-gray-900 mb-1 slice-text-4"
+          v-html="body"
+        ></div>
       </div>
     </div>
   </div>
