@@ -88,5 +88,8 @@ export default {
   message_error: "Error found in text:",
   error_text: "Comments for the author (optional)",
   footer_host: `When using materials reference to www.{host} is required`,
-  'ctrl_enter': "When you find an error on the site, highlight it and press Ctrl + Enter",
+  ctrl_enter:
+    "When you find an error on the site, highlight it and press Ctrl + Enter",
+  developed_by: `<p class="mr-3 text-white text-sm">Developed by</p> {img}`,
+  contacts: "Contacts",
 };

@@ -90,4 +90,7 @@ export default {
   error_text: "Муаллиф учун изоҳлар (ихтиёрий)",
   footer_host: `Маълумотлардан фойдаланилганда www.{host} га ҳавола кўрсатилиши шарт`,
   ctrl_enter: "Сайтда хато топганингизда, уни белгилаб Ctrl+Enterни босинг",
+  developed_by:
+    '<p class="ml-3 text-white text-sm">{img} томонидан ишлаб чиқилган</p>',
+  contacts: "Контактлар",
 };

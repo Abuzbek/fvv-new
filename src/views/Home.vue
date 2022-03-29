@@ -26,7 +26,6 @@ const i18n = useI18n();
 const showPhoto = ref(false);
 const showVideo = ref(false);
 const soc_links = ref({});
-
 const attachment = ref({
   src: "",
   idx: 0,
@@ -209,19 +208,15 @@ function hidePhoto() {
   showPhoto.value = false;
 }
 function nextVideo(idx) {
-  let splity = videos.value[idx].video_path.split("/");
-  splity = splity[splity.length - 1];
   attachment.value = {
-    src: splity,
+    src: videos.value[idx].video,
     idx: idx,
     title: videos.value[idx].title,
   };
 }
 function prevVideo(idx) {
-  let splity = videos.value[idx].video_path.split("/");
-  splity = splity[splity.length - 1];
   attachment.value = {
-    src: splity,
+    src: videos.value[idx].video,
     idx: idx,
     title: videos.value[idx].title,
   };
@@ -232,21 +227,11 @@ function hideVideo() {
 function clickVideo(id) {
   videos.value.find((n, i) => {
     if (n.id == id) {
-      if (videos.value[i].video_path.includes("yout")) {
-        let splity = videos.value[i].video_path.split("/");
-        splity = splity[splity.length - 1];
-        attachment.value = {
-          src: splity,
-          idx: i,
-          title: videos.value[i].title,
-        };
-      } else {
-        attachment.value = {
-          src: videos.value[i].video_path,
-          idx: i,
-          title: videos.value[i].title,
-        };
-      }
+      attachment.value = {
+        src: videos.value[i].video,
+        idx: i,
+        title: videos.value[i].title,
+      };
     }
   });
   showVideo.value = true;
@@ -354,7 +339,7 @@ const photos = ref([]);
 const usefull = ref([]);
 </script>
 
-<template> 
+<template>
   <div class="home">
     <header>
       <div class="container mx-auto px-4">
@@ -499,7 +484,9 @@ const usefull = ref([]);
     </div>
     <section class="bg-blue-primary pt-5 pb-7">
       <div class="container mx-auto">
-        <h2 class="text-center mb-8 text-white text-3xl font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+        <h2
+          class="text-center mb-8 text-white text-3xl font-semibold transition duration-200"
+        >
           {{ t("general_statistics") }}
         </h2>
         <div class="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-8">
@@ -563,17 +550,20 @@ const usefull = ref([]);
       </div>
     </section>
     <div class="container mx-auto px-4 pb-10">
-      <section class="photo-video bg-white p-5 rounded-lg  mb-5">
+      <section class="photo-video bg-white p-5 rounded-lg mb-5">
         <router-link
           to="/video-fayllar"
           class="inline-block text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
         >
           {{ t("video_clips") }}
         </router-link>
-        <div class="videos grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5">
+        <div
+          class="videos grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5"
+        >
           <div
-            class="card-video relative rounded-lg"
+            class="card-video relative rounded-lg cursor-pointer"
             v-for="(n, i) in videos"
+            @click.prevent="clickVideo(n.id)"
             :key="i"
           >
             <img
@@ -589,10 +579,7 @@ const usefull = ref([]);
                 {{ n.title }}
               </p>
             </div>
-            <a
-              class="play-btn block cursor-pointer absolute"
-              @click.prevent="clickVideo(n.id)"
-            >
+            <a class="play-btn block cursor-pointer absolute">
               <img src="@/assets/img/home/play.svg" alt="" />
             </a>
           </div>
@@ -628,7 +615,9 @@ const usefull = ref([]);
     </div>
     <div class="container mx-auto px-4 pb-10">
       <section class="sunscribe bg-white p-5 pb-11 rounded-lg">
-        <h3 class="text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+        <h3
+          class="text-3xl text-gray-900 mb-4 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+        >
           {{ t("subscribe_to_news") }}
         </h3>
         <div class="grid xl:grid-cols-2 gap-8">
@@ -685,7 +674,9 @@ const usefull = ref([]);
     </div>
     <section class="usefull_link bg-thin-yellow-primary pt-6 pb-10 mb-28">
       <div class="container mx-auto px-4">
-        <h3 class="text-3xl text-gray-900 mb-4  ml-20 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75">
+        <h3
+          class="text-3xl text-gray-900 mb-4 ml-20 font-semibold transition duration-200 hover:text-blue-primary hover:opacity-75"
+        >
           {{ t("useful_links") }}
         </h3>
         <div class="swiper-container swiper-usefull sm:px-20 px-10">
@@ -731,12 +722,12 @@ const usefull = ref([]);
     >
       <template v-slot:img>
         <transition name="transformX">
-          <iframe
-            class="w-full max-w-2xl h-80 pointer-events-auto"
-            :src="'https://www.youtube.com/embed/' + attachment.src"
-            :title="attachment.title"
-            frameborder="0"
-          ></iframe>
+          <video
+            v-if="attachment.src"
+            :src="attachment.src"
+            class="max-w-2xl w-full object-cover pointer-events-auto"
+            controls
+          ></video>
         </transition>
       </template>
     </LightGallery>

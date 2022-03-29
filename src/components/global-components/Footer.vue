@@ -61,9 +61,7 @@ watch(
         class="grid grid-cols-12 gap-7 pb-12 footer-top"
         style="border-bottom: 1px solid rgba(230, 242, 255, 0.2)"
       >
-        <div
-          class="lg:col-span-3 md:col-span-4 col-span-12 flex flex-col"
-        >
+        <div class="lg:col-span-3 md:col-span-4 col-span-12 flex flex-col">
           <a href="/" class="nav-logo flex items-center mb-12 font-semibold">
             <img src="@/assets/img/logo.png" />
             <p class="ml-1.5" v-html="t('name')"></p>
@@ -92,7 +90,7 @@ watch(
           </ul>
         </div>
         <div class="lg:col-span-2 sm:col-span-6 col-span-12">
-          <h3>Kontaktlar</h3>
+          <h3>{{ t("contacts") }}</h3>
           <ul>
             <li>
               <a href="tel:1101">{{ t("rescue_service") }}: 1101</a>
@@ -121,9 +119,12 @@ watch(
           href="https://technocorp.uz/"
           target="_blank"
           class="flex items-center"
+          v-html="
+            t('developed_by', {
+              img: `TECHNOCORP`,
+            })
+          "
         >
-          <p class="mr-3 text-white text-sm">Saytni ishlab chiqdi:</p>
-          <img src="@/assets/icon/Logo.png" alt="" />
         </a>
       </div>
     </div>

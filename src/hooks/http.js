@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "https://back.fvv.technocorp.uz",
+  baseURL: "/",
 });
 
 export default http;

@@ -187,21 +187,11 @@ class Methods {
   clickVideo(id) {
     dataResults.value.find((n, i) => {
       if (n.id == id) {
-        if (dataResults.value[i].video_path.includes("yout")) {
-          let splity = dataResults.value[i].video_path.split("/");
-          splity = splity[splity.length - 1];
-          attachment.value = {
-            src: splity,
-            idx: i,
-            title: dataResults.value[i].title,
-          };
-        } else {
-          attachment.value = {
-            src: dataResults.value[i].video_path,
-            idx: i,
-            title: dataResults.value[i].title,
-          };
-        }
+        attachment.value = {
+          src: dataResults.value[i].video,
+          idx: i,
+          title: dataResults.value[i].title,
+        };
       }
     });
     showLight.value = true;
@@ -210,19 +200,15 @@ class Methods {
     showLight.value = false;
   }
   nextGallery(idx) {
-    let splity = dataResults.value[idx].video_path.split("/");
-    splity = splity[splity.length - 1];
     attachment.value = {
-      src: splity,
+      src: dataResults.value[idx].video,
       idx: idx,
       title: dataResults.value[idx].title,
     };
   }
   prevGallery(idx) {
-    let splity = dataResults.value[idx].video_path.split("/");
-    splity = splity[splity.length - 1];
     attachment.value = {
-      src: splity,
+      src: dataResults.value[idx].video,
       idx: idx,
       title: dataResults.value[idx].title,
     };
@@ -292,7 +278,7 @@ const {
   nextPhoto,
   prevPhoto,
   hidePhoto,
-  clickPhoto
+  clickPhoto,
 } = new Methods();
 onMounted(async () => {
   await getContent();
@@ -460,12 +446,14 @@ watch(
         >
           <template v-slot:img>
             <transition name="transformX">
-              <iframe
-                class="w-full max-w-2xl h-80 pointer-events-auto"
-                :src="'https://www.youtube.com/embed/' + attachment.src"
-                :title="attachment.title"
-                frameborder="0"
-              ></iframe>
+              <div @click.stop>
+                <video
+                  v-if="attachment.src"
+                  :src="attachment.src"
+                  class="max-w-2xl w-full object-cover pointer-events-auto"
+                  controls
+                ></video>
+              </div>
             </transition>
           </template>
         </LightGallery>

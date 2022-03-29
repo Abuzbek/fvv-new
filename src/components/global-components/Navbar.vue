@@ -244,132 +244,121 @@ watch(i18n.locale, async (val) => {
         <div class="flex flex-wrap items-center justify-between">
           <a href="/" class="nav-logo flex items-center">
             <img src="@/assets/img/logo.png" alt />
-            <p class="ml-1.5" v-html="t('name')"></p>
+            <p
+              class="ml-1.5 font-semibold"
+              style="line-height: 130%"
+              v-html="t('name')"
+            ></p>
           </a>
-          <div class="phone-numbers lg:block hidden">
-            <ul class="flex items-center">
-              <li>
-                <a href="tel:1050" class="flex items-center mx-2.5">
-                  <img class="mr-0.5" src="@/assets/icon/nav/phone.svg" alt />
-                  <span class="text-primary mr-1">1050-</span>
-                  <span>{{ t("rescue_service") }}</span>
-                </a>
-              </li>
-              <li>
-                <a href="tel:1101" class="flex items-center mx-2.5">
-                  <img class="mr-0.5" src="@/assets/icon/nav/phone.svg" alt />
-                  <span class="text-primary mr-1">1101-</span>
-                  <span>{{ t("helpline") }}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="utility lg:block hidden">
-            <ul class="flex items-center">
-              <li class="relative">
-                <button class="mx-3.5 block" @click="speakText">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="#4f4f4f"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
-                    />
-                  </svg>
-                </button>
-              </li>
-              <li class="relative">
-                <button class="mx-3.5 block" @click.stop="toggleChangeMenu">
-                  <img src="@/assets/icon/nav/glasses.svg" alt />
-                </button>
-                <change-site
-                  v-show="openChangeMenu"
-                  @close="openChangeMenu = false"
-                />
-              </li>
-              <li>
-                <div
-                  class="lang relative xl:block hidden pl-5"
-                  :class="{ active: openLangMenu }"
-                >
+
+          <div class="flex items-center gap-12">
+            <div class="utility lg:block hidden">
+              <ul class="flex items-center">
+                <li class="relative">
+                  <button class="mx-3.5 block" @click="speakText">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="#4f4f4f"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+                      />
+                    </svg>
+                  </button>
+                </li>
+                <li class="relative">
+                  <button class="mx-3.5 block" @click.stop="toggleChangeMenu">
+                    <img src="@/assets/icon/nav/glasses.svg" alt />
+                  </button>
+                  <change-site
+                    v-show="openChangeMenu"
+                    @close="openChangeMenu = false"
+                  />
+                </li>
+                <li>
                   <div
-                    @click="openMenu"
-                    class="lang-view flex items-center cursor-pointer lang-outside"
+                    class="lang relative xl:block hidden pl-5"
+                    :class="{ active: openLangMenu }"
                   >
-                    <img :src="img.icon" alt="" class="lang-outside" />
-                    <img
-                      class="ml-4 lang-outside"
-                      src="@/assets/icon/arrow-down.svg"
-                      alt=""
-                    />
+                    <div
+                      @click="openMenu"
+                      class="lang-view flex items-center cursor-pointer lang-outside"
+                    >
+                      <img :src="img.icon" alt="" class="lang-outside" />
+                      <img
+                        class="ml-4 lang-outside"
+                        src="@/assets/icon/arrow-down.svg"
+                        alt=""
+                      />
+                    </div>
+                    <div
+                      class="lang-content z-20 absolute bg-white shadow-md flex items-center justify-center py-4 top-12 rounded"
+                    >
+                      <ul>
+                        <li v-for="(lang, idx) in localeContent" :key="idx">
+                          <a
+                            href="#!"
+                            @click.prevent="switchLanguage(lang.locale)"
+                            :class="[
+                              { 'pt-2': idx == 0 },
+                              { 'pb-2': idx == 2 },
+                              { 'pb-1': idx !== 2 },
+                              { 'pt-1': idx !== 0 },
+                            ]"
+                            class="px-3 inline-block hover:bg-blue-primary transition duration-300 w-full hover:text-white"
+                          >
+                            {{ lang.name }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div
-                    class="lang-content z-20 absolute bg-white shadow-md flex items-center justify-center py-4 top-12 rounded"
-                  >
-                    <ul>
-                      <li v-for="(lang, idx) in localeContent" :key="idx">
-                        <a
-                          href="#!"
-                          @click.prevent="switchLanguage(lang.locale)"
-                          :class="[
-                            { 'pt-2': idx == 0 },
-                            { 'pb-2': idx == 2 },
-                            { 'pb-1': idx !== 2 },
-                            { 'pt-1': idx !== 0 },
-                          ]"
-                          class="px-3 inline-block hover:bg-blue-primary transition duration-300 w-full hover:text-white"
-                        >
-                          {{ lang.name }}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <form
-            @submit.prevent="redirectSearchPage"
-            class="search-box lg:flex hidden border border-gray-400 rounded-md overflow-hidden"
-          >
-            <input
-              type="text"
-              class="focus:outline-none p-1"
-              v-model="search"
-              :placeholder="`${t('search')}`"
-            />
-            <div class="search-icon flex items-center justify-center">
-              <button type="submit" class="inline-block">
-                <img src="@/assets/icon/nav/search.svg" alt />
-              </button>
+                </li>
+              </ul>
             </div>
-          </form>
-          <button
-            @click="toggleMobile"
-            class="ml-5 transform active:scale:95 block xl:hidden"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <form
+              @submit.prevent="redirectSearchPage"
+              class="search-box lg:flex hidden border border-gray-400 rounded-md overflow-hidden"
             >
-              <path
-                d="M4 6H20M4 12H20M4 18H20"
-                stroke="#2a2a2a"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <input
+                type="text"
+                class="focus:outline-none p-1"
+                v-model="search"
+                :placeholder="`${t('search')}`"
               />
-            </svg>
-          </button>
+              <div class="search-icon flex items-center justify-center">
+                <button type="submit" class="inline-block">
+                  <img src="@/assets/icon/nav/search.svg" alt />
+                </button>
+              </div>
+            </form>
+            <button
+              @click="toggleMobile"
+              class="ml-5 transform active:scale:95 block xl:hidden"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 6H20M4 12H20M4 18H20"
+                  stroke="#2a2a2a"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -383,7 +372,7 @@ watch(i18n.locale, async (val) => {
                   href="#!"
                   @click.prevent="linkClick(i)"
                   type="button"
-                  class="inline-flex justify-center w-full rounded-md shadow-sm px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:text-orange-primary "
+                  class="inline-flex justify-center w-full rounded-md shadow-sm px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:text-orange-primary"
                   id="menu-button"
                   aria-expanded="true"
                   aria-haspopup="true"

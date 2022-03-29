@@ -26,7 +26,7 @@ export default {
   tel: "Tel:",
   fontSize: "Shrift o‘lchami",
   send: "Yuborish",
-  search:`Sayt bo'ylab qidirish`,
+  search: `Sayt bo'ylab qidirish`,
   useful_links: "Foydali havolalar",
   footerCopy:
     "© 2005-2021 FVV Akademiyasi huzuridagi fuqaro muhofazasi instituti ",
@@ -84,10 +84,13 @@ export default {
   file: "Fayl",
   message: "Xabar",
   message_sent: "Rahbariyatga murojaat",
-  text_error_message:'Muallifga xatolik haqida xabar yuborilsinmi?',
-  message_error:'Matnda topilgan xatolik:',
-  error_text:'Muallif uchun izohlar (ixtiyoriy)',
-  footer_host:`Ma'lumotlardan foydalanilganda
+  text_error_message: "Muallifga xatolik haqida xabar yuborilsinmi?",
+  message_error: "Matnda topilgan xatolik:",
+  error_text: "Muallif uchun izohlar (ixtiyoriy)",
+  footer_host: `Ma'lumotlardan foydalanilganda
   www.{host} ga havola ko‘rsatilishi shart`,
-  'ctrl_enter': "Saytda xato topganingizda, uni belgilab Ctrl+Enter ni bosing",
+  ctrl_enter: "Saytda xato topganingizda, uni belgilab Ctrl+Enter ni bosing",
+  developed_by:
+    '{img} <p class="ml-3 text-white text-sm"> tomonidan ishlab chiqilgan</p>',
+    contacts:'Kontaktlar',
 };
