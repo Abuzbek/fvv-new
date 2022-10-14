@@ -39,56 +39,40 @@ class Methods {
 const { byParentId, getContent } = new Methods();
 onMounted(async () => {
   await getContent();
-console.clear()
+  // console.clear()
 });
 watch(
   () => route.params,
   async (val) => {
     if (val.bookId) {
       await getContent();
-console.clear()
+      // console.clear()
     }
   }
 );
 watch(
   () => i18n.locale.value,
   async () => {
-      await getContent();
-console.clear()
+    await getContent();
+    // console.clear()
   }
 );
 </script>
 <template>
   <div>
-    <Header
-      v-if="category"
-      :subtitle="category.subtitle"
-      :image="category.image"
-    />
-    <div
-      class="fixed top-0 left-0 z-50 bg-gray-800 w-full h-full flex items-center justify-center"
-      v-else
-    >
+    <Header v-if="category" :subtitle="category.subtitle" :image="category.image" />
+    <div class="fixed top-0 left-0 z-50 bg-gray-800 w-full h-full flex items-center justify-center" v-else>
       <img src="@/assets/img/animation_500_kyicu3ga.gif" alt="" />
     </div>
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 grid md:grid-cols-2 grid-cols-1 gap-6">
       <div class="card bg-white p-5 rounded-lg mt-10 mb-12">
-        <div
-          class="book-card py-2 px-4 rounded-lg flex items-center"
-          v-for="(n, i) in dataResults"
-          :key="i"
-          :class="{
-            'bg-gray-200': i % 2 == 0,
-          }"
-          :id="i"
-        >
+        <div class="book-card py-2 px-4 rounded-lg flex items-center" v-for="(n, i) in dataResults" :key="i" :class="{
+          'bg-gray-200': i % 2 == 0,
+        }" :id="i">
           <img :src="n.image" class="w-11 h-12" alt="" />
-          <router-link
-            class="ml-2.5 text-lg border-b border-transparent hover:border-gray-900 text-gray-900"
-            to="#!"
-          >
+          <a target="_blank" class="ml-2.5 text-lg border-b border-transparent hover:border-gray-900 text-gray-900" :href="n.file">
             {{ n.title }}
-          </router-link>
+          </a>
         </div>
       </div>
     </div>

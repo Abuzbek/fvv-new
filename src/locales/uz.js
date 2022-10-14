@@ -1,6 +1,7 @@
 export default {
   name: `FVV Akademiyasi huzuridagi
-  <br />fuqaro muhofazasi instituti`,
+  <br />Fuqaro muhofazasi instituti`,
+  title: `FVV Akademiyasi huzuridagi Fuqaro muhofazasi instituti`,
   header_title: `"Ilm o‘tda yonmaydigan, suvda cho‘kmaydigan, hech kim sizdan tortib
   ololmaydigan boylik ekanini aslo unutmang!"`,
   rescue_service: "Qutqaruv xizmati",
@@ -29,7 +30,7 @@ export default {
   search: `Sayt bo'ylab qidirish`,
   useful_links: "Foydali havolalar",
   footerCopy:
-    "© 2005-2021 FVV Akademiyasi huzuridagi fuqaro muhofazasi instituti ",
+    "© 2005-2021 FVV Akademiyasi huzuridagi Fuqaro muhofazasi instituti ",
   contact: `<div class='mb-12'>
   <div class='mb-8'> 
   <h2 class='text-2xl text-blue-primary font-medium'> Texnik bo'lim: </h2> <p class='2xl:text-lg text-gray-900'>
@@ -93,4 +94,5 @@ export default {
   developed_by:
     '{img} <p class="ml-3 text-white text-sm"> tomonidan ishlab chiqilgan</p>',
     contacts:'Kontaktlar',
+    testSite: "Sayt test rejimida ishlamoqda",
 };

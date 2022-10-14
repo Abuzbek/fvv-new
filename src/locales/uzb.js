@@ -1,5 +1,6 @@
 export default {
-  name: "ФВВ Академияси ҳузуридаги <br /> фуқаро муҳофазаси институти",
+  name: "ФВВ Академияси ҳузуридаги <br /> Фуқаро муҳофазаси институти",
+  title: "ФВВ Академияси ҳузуридаги Фуқаро муҳофазаси институти",
   rescue_service: "Қутқарув хизмати",
   header_title: `"Илм ўтда ёнмайдиган, сувда чўкмайдиган, ҳеч ким сиздан тортиб
   ололмайдиган бойлик эканини асло унутманг"`,
@@ -29,7 +30,7 @@ export default {
   fontSize: "Шрифт ўлчами",
   search: "Сайт бўйлаб қидириш",
   footerCopy:
-    "© 2005-2021 FVV Akademiyasi huzuridagi fuqaro muhofazasi instituti ",
+    "© 2005-2021 FVV Akademiyasi huzuridagi Fuqaro muhofazasi instituti ",
   contact: `<div class="mb-12">
   <div class="mb-8">
       <h2 class="text-2xl text-blue-primary font-medium">
@@ -93,4 +94,5 @@ export default {
   developed_by:
     '<p class="ml-3 text-white text-sm">{img} томонидан ишлаб чиқилган</p>',
   contacts: "Контактлар",
+  testSite: "Сайт тест режимида ишламоқда",
 };

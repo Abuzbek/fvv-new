@@ -1,5 +1,6 @@
 export default {
   name: "At the Academy of the Ministry of Emergency <br /> Situations Civil Protection Institute",
+  title: "At the Academy of the Ministry of Emergency Situations Civil Protection Institute",
   header_title: `"Never forget that science is a treasure that will not burn, will not sink, and will not be taken away from you!"`,
   rescue_service: "Rescue service",
   helpline: "Helpline",
@@ -92,4 +93,5 @@ export default {
     "When you find an error on the site, highlight it and press Ctrl + Enter",
   developed_by: `<p class="mr-3 text-white text-sm">Developed by</p> {img}`,
   contacts: "Contacts",
+  testSite: "The site works in a test mode",
 };

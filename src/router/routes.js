@@ -4,6 +4,7 @@ import _id from "../views/_id/index.vue";
 import _bookId from "../views/_id/_bookId.vue";
 import _innerId from "../views/_id/_inner.vue";
 import Appels from "../views/rahbariyatga-murojaat.vue";
+import kafedralar from "../views/kafedralar.vue";
 import Search from "../views/search";
 export default [
   {
@@ -40,5 +41,10 @@ export default [
     path: "/:id/:typeId/:innerId",
     name: "_innerId",
     component: _innerId,
+  },
+  {
+    path: "/kafedra",
+    name: "kafedralar",
+    component: kafedralar,
   },
 ];

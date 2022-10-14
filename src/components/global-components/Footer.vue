@@ -57,10 +57,7 @@ watch(
 <template>
   <footer class="bg-fb-primary pt-12 pb-2.5 text-white">
     <div class="container mx-auto px-4">
-      <div
-        class="grid grid-cols-12 gap-7 pb-12 footer-top"
-        style="border-bottom: 1px solid rgba(230, 242, 255, 0.2)"
-      >
+      <div class="grid grid-cols-12 gap-7 pb-12 footer-top" style="border-bottom: 1px solid rgba(230, 242, 255, 0.2)">
         <div class="lg:col-span-3 md:col-span-4 col-span-12 flex flex-col">
           <a href="/" class="nav-logo flex items-center mb-12 font-semibold">
             <img src="@/assets/img/logo.png" />
@@ -75,16 +72,12 @@ watch(
             </p>
           </div>
         </div>
-        <div
-          class="lg:col-span-2 md:col-span-4 sm:col-span-6 col-span-12"
-          v-for="(n, i) in categories"
-          :key="i"
-        >
+        <div class="lg:col-span-2 md:col-span-4 sm:col-span-6 col-span-12" v-for="(n, i) in categories" :key="i">
           <h3>{{ n.name }}</h3>
           <ul v-for="(m, l) in n.children" :key="l">
             <li>
               <a :href="`/${m.slug}`" @click.prevent="openPage(m.slug)">{{
-                m.name
+              m.name
               }}</a>
             </li>
           </ul>
@@ -99,11 +92,7 @@ watch(
               <a href="tel:1050">{{ t("helpline") }}: 1050</a>
             </li>
             <li>
-              <router-link
-                class="font-semibold text-white"
-                to="/contact-info"
-                >{{ t("contact-info") }}</router-link
-              >
+              <router-link class="font-semibold text-white" to="/contact-info">{{ t("contact-info") }}</router-link>
             </li>
           </ul>
         </div>
@@ -112,19 +101,13 @@ watch(
         <p>
           {{ t("ctrl_enter") }}
         </p>
-        <div class="block md:w-auto w-full md:my-0 my-5">
-          <img src="../../assets/img/home/info.png" alt="" />
+        <div id="rated" class="block md:w-auto w-full md:my-0 my-5">
         </div>
-        <a
-          href="https://technocorp.uz/"
-          target="_blank"
-          class="flex items-center"
-          v-html="
-            t('developed_by', {
-              img: `TECHNOCORP`,
-            })
-          "
-        >
+        <a href="https://technocorp.uz/" target="_blank" class="flex items-center" v-html="
+          t('developed_by', {
+            img: `TECHNOCORP`,
+          })
+        ">
         </a>
       </div>
     </div>
@@ -135,13 +118,15 @@ watch(
   color: #fff;
   font-weight: 600;
 }
+
 h3 {
   font-weight: 600;
   font-size: 20px;
   line-height: 26px;
   margin-bottom: 15px;
 }
-.footer-top ul > li > a {
+
+.footer-top ul>li>a {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -149,13 +134,16 @@ h3 {
   display: inline-block;
   margin-bottom: 15px;
 }
+
 .footer-bottom {
   padding: 14px 0;
 }
+
 .footer-bottom ul {
   display: flex;
   align-items: center;
 }
+
 .footer-bottom a {
   display: flex;
   align-items: center;

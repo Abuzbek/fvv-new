@@ -24,7 +24,7 @@ function loadLocaleMessages() {
 }
 
 export default createI18n({
-  // legacy: false,
+  legacy: false,
   locale: localStorage.getItem("locale") || "uz",
   fallbackLocale: localStorage.getItem("locale") || "uz",
   messages: loadLocaleMessages(),

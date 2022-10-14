@@ -30,3 +30,12 @@ props.body = body;
     </div>
   </div>
 </template>
+<style>
+.slice-text-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+</style>

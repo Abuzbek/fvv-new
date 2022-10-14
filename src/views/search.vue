@@ -40,7 +40,7 @@
       >
         <div class="">
           <h2 class="text-2xl font-semibold slice-text-2">{{ n.title }}</h2>
-          <p class="text-gray-600 slice-text-3" v-html="n.body"></p>
+          <p class="text-gray-600 slice-text-3 body" v-html="n.body"></p>
         </div>
       </div>
       <div v-if="noResults">Malumot topilmadi :(</div>
