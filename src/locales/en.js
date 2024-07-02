@@ -1,5 +1,5 @@
 export default {
-  name: "At the Academy of the Ministry of Emergency <br /> Situations Civil Protection Institute",
+  name: "Civil protection Institute of the Ministry of Emergency Situations of the Republic of Uzbekistan",
   title: "At the Academy of the Ministry of Emergency Situations Civil Protection Institute",
   header_title: `"Never forget that science is a treasure that will not burn, will not sink, and will not be taken away from you!"`,
   rescue_service: "Rescue service",

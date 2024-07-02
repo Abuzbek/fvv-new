@@ -12,16 +12,10 @@ const i18n = useI18n();
 const data = ref([]);
 const dataResults = ref([]);
 const category = ref(null);
+const firstSign = ref(1);
 class Methods {
   async byParentId() {
     let url = `/${i18n.locale.value}/api/${route.params.typeId}/${route.params.innerId}/`;
-    if (route.params.typeId == 'articles') {
-      let url = `/${i18n.locale.value}/api/articles/view_count/${route.params.innerId}/`;
-      await http({
-        method: "GET",
-        url: url,
-      });
-    }
     const resp = await http({
       method: "GET",
       url: url,
@@ -55,8 +49,17 @@ class Methods {
       return !!(value) === true;
     }
   }
+  async getViewCount() {
+    if (route.params.typeId == 'articles') {
+      let urlView = `/${i18n.locale.value}/api/articles/view_count/${route.params.innerId}/`;
+      await http({
+        method: "GET",
+        url: urlView,
+      });
+    }
+  }
 }
-const { byParentId, getContent, isTrue } = new Methods();
+const { byParentId, getContent, isTrue, getViewCount } = new Methods();
 onMounted(async () => {
   await getContent();
   // console.clear();
@@ -92,6 +95,19 @@ watch(
     document.querySelector("title").innerText = localStorage.getItem("title");
   }
 );
+setTimeout(() => {
+  const section = window.document.querySelectorAll('.footer-section')[0]
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(async (entry) => {
+      if (entry.isIntersecting && firstSign.value === 1) {
+        await getViewCount(route.params.id)
+        firstSign.value++
+      }
+    })
+  })
+  observer.observe(section)
+}, 400)
+
 </script>
 <template>
   <div>
@@ -139,5 +155,6 @@ watch(
         </div>
       </div>
     </div>
+    <div class="footer-section"></div>
   </div>
 </template>

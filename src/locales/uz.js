@@ -1,6 +1,5 @@
 export default {
-  name: `FVV Akademiyasi huzuridagi
-  <br />Fuqaro muhofazasi instituti`,
+  name: `O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi Fuqaro muhofazasi instituti`,
   title: `FVV Akademiyasi huzuridagi Fuqaro muhofazasi instituti`,
   header_title: `"Ilm o‘tda yonmaydigan, suvda cho‘kmaydigan, hech kim sizdan tortib
   ololmaydigan boylik ekanini aslo unutmang!"`,
@@ -93,6 +92,6 @@ export default {
   ctrl_enter: "Saytda xato topganingizda, uni belgilab Ctrl+Enter ni bosing",
   developed_by:
     '{img} <p class="ml-3 text-white text-sm"> tomonidan ishlab chiqilgan</p>',
-    contacts:'Kontaktlar',
-    testSite: "Sayt test rejimida ishlamoqda",
+  contacts: "Kontaktlar",
+  testSite: "Sayt test rejimida ishlamoqda",
 };
